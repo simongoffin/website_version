@@ -6,6 +6,8 @@ from openerp.osv import osv
 class view_version(osv.osv):
     _inherit = "ir.ui.view"
     
+    
+    
     def write(self, cr, user, ids, vals, context=None):
         #import pudb; pudb.set_trace()
         for view in self.browse(cr, user, ids, context=context):
