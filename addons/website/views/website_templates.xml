@@ -803,6 +803,15 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         </div>
     </t>
 </template>
+<template id="mypage" name="My Page" page="True">
+    <t t-call="website.layout">
+        <div>3+5=<t t-esc="3+5"/></div>
+        <t t-set="message">Coucou!</t>
+        <div>Voici mon message avec raw:<t t-raw="message"/></div>
+        <div>Voici mon message avec esc:<t t-esc="message"/></div>
+        <div>Hello world!</div>
+    </t>
+</template>
 
      </data>
 </openerp>
