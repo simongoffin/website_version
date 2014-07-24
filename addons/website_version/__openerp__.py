@@ -14,8 +14,11 @@ OpenERP Website CMS
     'data': [
         'security/ir.model.access.csv',
         'views/website_backend_navbar.xml',
+        'views/website_version_templates.xml',
     ],
     'demo': [],
-    'qweb': [],
+    'qweb': [
+        'static/src/xml/*.xml'
+    ],
     'application': True,
 }
