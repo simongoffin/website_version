@@ -12,16 +12,13 @@ class view_version(osv.osv):
     }
     
     def write(self, cr, user, ids, vals, context=None):
-        import pudb; pudb.set_trace()
+        #import pudb; pudb.set_trace()
         for view in self.browse(cr, user, ids, context=context):
             if 'arch' in vals and view.type == 'qweb':
                 old_view=self.read(cr, user, ids,['name','model','priority','type','arch',
-                'inherit_id','inherit_children_ids','field_parent','model_data_id','xml_id',
-                'groups_id','model_ids','create_date','write_date','mode','application'], context=None)
-                #old_view['version_ids']=view
-                #la nouvelle vue pointe vers son parent
-                #vals['master_id']=
-                self.create(cr, user, old_view, context=context)
+                'field_parent','xml_id',
+                'create_date','write_date','mode','application'], context=None)
+                old_view['version_ids']=view
+                old_id=self.create(cr, user, old_view, context=context)
+                vals['master_id']=old_id
         super(view_version, self).write(cr, user, ids, vals, context=None)
-        
-        
