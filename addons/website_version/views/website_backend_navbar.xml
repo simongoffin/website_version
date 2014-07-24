@@ -6,5 +6,12 @@
                  <button type="button" data-action="previous" class="btn btn-primary btn-xs">Previous</button>
             </xpath>
         </template>
+
+        <template id="old_version" inherit_id="website.user_navbar" groups="base.group_website_publisher">
+            <xpath expr="//li[@class='dropdown']/ul[@class='dropdown-menu']/li[1]" position="after">
+                 <li>Previous version</li>
+            </xpath>
+        </template>
     </data>
 </openerp>
+
