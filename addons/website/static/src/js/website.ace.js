@@ -252,6 +252,7 @@
             this.aceEditor.setValue(xml.format());
         },
         saveViews: function () {
+            console.log("Ok!");
             var self = this;
             var toSave = _.filter(_.map(self.buffers, function (editingSession, viewId) {
                 return {

@@ -324,6 +324,7 @@
 
             this.$buttons.edit.click(function(ev) {
                 self.edit();
+                console.log('Ok!');
             });
 
             this.rte = new website.RTE(this);

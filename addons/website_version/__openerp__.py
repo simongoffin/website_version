@@ -13,9 +13,9 @@ OpenERP Website CMS
     'installable': True,
     'data': [
         'security/ir.model.access.csv',
-        'views/website_backend_navbar.xml',
+        'views/website_version_assets.xml',
     ],
     'demo': [],
-    'qweb': [],
+    'qweb': ['static/src/xml/*.xml'],
     'application': True,
 }
