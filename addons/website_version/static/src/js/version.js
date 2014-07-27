@@ -1,12 +1,14 @@
-openerp.website_version = function(instance) {
-    var _t = instance.web._t,
-        _lt = instance.web._lt;
-    var QWeb = instance.web.qweb;
+(function() {
+    'use strict';
+    var hash = "#advanced-view-editor";
+    var _t = openerp._t;
+    
+    var website=openerp.website;
+    website.add_template_file('/website_version/static/src/xml/preview.xml');
 
-    instance.website_version = {};
+    website.action= {};
 
-    instance.website_version.action = instance.web.Widget.extend({
-        template: "website.ace_view_editor",
+    website.action.Preview = openerp.Widget.extend({
         init: function(parent) {
             this._super(parent);
         },
@@ -14,13 +16,13 @@ openerp.website_version = function(instance) {
             $("#my_button_preview").click(function() {
                 console.log("You just clicked!");
                 
-                var id_seq=$("main").html();
-                
-                openerp.jsonRpc( '/request_rpc', 'call', 
-                {'id_seq' : id_seq})
-                .then(function (result) {
-                    console.log(result);
-                })
+//                 var id_seq=$("main").html();
+//                 
+//                 openerp.jsonRpc( '/request_rpc', 'call', 
+//                 {'id_seq' : id_seq})
+//                 .then(function (result) {
+//                     console.log(result);
+//                 })
                 
             });
             
@@ -28,6 +30,10 @@ openerp.website_version = function(instance) {
             },
     });
     
-};
+    website.ready().done(function() {
+        console.log("This is the solution!");
+    });
+    
+})();
 
 
