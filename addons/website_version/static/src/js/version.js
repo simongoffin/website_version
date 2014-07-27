@@ -6,15 +6,21 @@ openerp.website_version = function(instance) {
     instance.website_version = {};
 
     instance.website_version.action = instance.web.Widget.extend({
-        template: "website.user_navbar",
+        template: "website.ace_view_editor",
         init: function(parent) {
             this._super(parent);
         },
         start: function() {
-            $("button").click(function() {
-                console.log("someone clicked on the button");
+            $("#my_button_preview").click(function() {
+                console.log("You just clicked!");
                 
+                var id_seq=$("main").html();
                 
+                openerp.jsonRpc( '/request_rpc', 'call', 
+                {'id_seq' : id_seq})
+                .then(function (result) {
+                    console.log(result);
+                })
                 
             });
             
@@ -22,9 +28,6 @@ openerp.website_version = function(instance) {
             },
     });
     
-    $( document ).ready(function() {
-    console.log( "ready!" );
-    });
-        
-})();
+};
+
 

@@ -15,8 +15,8 @@ class ViewVersion(osv.Model):
         for view in self.browse(cr, uid, ids, context=context):
             if view.type == 'qweb' and 'arch' in vals and not 'inherit_id' in vals:
                 copy_id=self.copy(cr,uid,view.id,{})
-                #self.write(cr, uid, copy_id, {'master_id':view.id})
-                super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, old_id)]}, context=context)
+                #self.write(cr, uid, [copy_id], {'master_id':copy_id})
+                super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, view.id)]}, context=context)
                 vals['master_id'] = copy_id
                 
         super(ViewVersion, self).write(cr, uid, ids, vals, context=context)

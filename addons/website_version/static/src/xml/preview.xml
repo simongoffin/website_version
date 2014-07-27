@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1: -->
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="website.ace_view_editor">
+        <t t-jquery=".form-inline oe_ace_view_editor_title" t-operation="after">
+            <button data-action="preview" type="submit" class="btn btn-success">Preview</button>
+        </t>
+    </t>
+</templates>
