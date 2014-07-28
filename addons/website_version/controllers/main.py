@@ -21,12 +21,12 @@ class TableExporter(http.Controller):
     @http.route(['/request_rpc'], type='json', auth="public", website=True)
     def publish(self,id_seq):
         #from pudb import set_trace; set_trace()
-        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
-        iuv = request.registry['ir.ui.view']
+#         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+#         iuv = request.registry['ir.ui.view']
         id_view = get_id(id_seq)
-        view=iuv.browse(cr, uid, [id_view], context)[0]
-        for old_view in view.version_ids:
-            first=old_view
-            break
+#         view=iuv.browse(cr, uid, [id_view], context)[0]
+#         for old_view in view.version_ids:
+#             first=old_view
+#             break
         
-        return 'True'
+        return id_view

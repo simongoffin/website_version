@@ -38,13 +38,13 @@
             $('#my_button_preview').click(function() {
                 console.log("You just clicked!");
                 
-//                 var id_seq=$("main").html();
-//                 
-//                 openerp.jsonRpc( '/request_rpc', 'call', 
-//                 {'id_seq' : id_seq})
-//                 .then(function (result) {
-//                     console.log(result);
-//                 })
+                 var id_seq=$("main").html();
+                 console.log(id_seq);
+                                  openerp.jsonRpc( '/request_rpc', 'call', 
+                {'id_seq' : id_seq})
+                .then(function (result) {
+                    console.log(result);
+                })
                 
             });
             return this._super();
