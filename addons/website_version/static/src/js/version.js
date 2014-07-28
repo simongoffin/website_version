@@ -39,10 +39,10 @@
                 console.log("You just clicked!");
                 
                  var id_seq=$("main").html();
-                 console.log(id_seq);
-                                  openerp.jsonRpc( '/request_rpc', 'call', 
+                openerp.jsonRpc( '/request_rpc', 'call', 
                 {'id_seq' : id_seq})
                 .then(function (result) {
+                    location.reload();
                     console.log(result);
                 })
                 

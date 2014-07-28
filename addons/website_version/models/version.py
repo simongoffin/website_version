@@ -20,3 +20,6 @@ class ViewVersion(osv.Model):
                 vals['master_id'] = copy_id
                 
         super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
+        
+    def write_simple(self, cr, uid, ids, vals, context=None):
+        super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
