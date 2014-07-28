@@ -3,7 +3,8 @@
 -->
 <openerp>
     <data>
-        <template id="assets_backend_preview" name="website_version assets" inherit_id="website.assets_frontend">
+        <template id="assets_backend_preview" name="website_version assets" inherit_id="website.assets_editor">
+            
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/website_version/static/src/js/version.js"></script>
             </xpath>

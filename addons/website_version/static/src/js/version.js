@@ -32,6 +32,25 @@
             },
     });
     
+    website.ace.ViewEditor.include({
+        start: function() {
+            console.log("This is my solution!!!");
+            $('#my_button_preview').click(function() {
+                console.log("You just clicked!");
+                
+//                 var id_seq=$("main").html();
+//                 
+//                 openerp.jsonRpc( '/request_rpc', 'call', 
+//                 {'id_seq' : id_seq})
+//                 .then(function (result) {
+//                     console.log(result);
+//                 })
+                
+            });
+            return this._super();
+        },
+    });
+    
     website.ready().done(function() {
         console.log("This is the solution!");
         var preview=new website.action.Preview();
