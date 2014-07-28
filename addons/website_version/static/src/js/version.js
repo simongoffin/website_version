@@ -13,7 +13,9 @@
             this._super(parent);
         },
         start: function() {
-            $("#my_button_preview").click(function() {
+            console.log("This is another solution!");
+            console.log($('.btn.btn-primary.btn-xs').get());
+            $('.btn.btn-primary.btn-xs').click(function() {
                 console.log("You just clicked!");
                 
 //                 var id_seq=$("main").html();
@@ -32,6 +34,8 @@
     
     website.ready().done(function() {
         console.log("This is the solution!");
+        var preview=new website.action.Preview();
+        preview.appendTo($('#oe_editzone'));
     });
     
 })();
