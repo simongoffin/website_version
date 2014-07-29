@@ -14,7 +14,7 @@
         snapshot: function() {
             console.log("Snapshot!");
             website.prompt({
-                id: "editor_new_page",
+                id: "editor_new_snapshot",
                 window_title: _t("New snapshot"),
                 input: _t("Page Title"),
                 init: function () {

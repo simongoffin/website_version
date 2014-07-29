@@ -30,6 +30,7 @@ class TableExporter(http.Controller):
         master_view=iuv.browse(cr, uid, [id_master], context)[0]
         arch_master=master_view.arch
         master_id_master=master_view.master_id.id
+        print master_view.version_ids
         iuv.write_simple(cr, uid,[id_view], {
                                         'arch': arch_master,
                                         'master_id':master_id_master,
