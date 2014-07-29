@@ -3,16 +3,15 @@
 <data>
 <!-- Front-end/Back-end integration -->
 <template id="user_navbar_version" inherit_id="website.layout" groups="base.group_user">
-    <xpath expr="//body/div['id=wrawrap']" position="before">
+    <xpath expr="//li['class=dropdown']" position="after">
             <li class="dropdown" id="version-menu" groups="base.group_website_designer">
                 <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
                     Version <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#advanced-view-editor" data-action='ace'>HTML Editor</a></li>
-                    <li><a href="/page/website.themes">Change Theme</a></li>
-                    <li><a href="/web#return_label=Website&amp;action=website.action_module_website">Install Apps</a></li>
-                    <li class="divider"></li>
+                <ul class="dropdown-menu oe_content_menu" role="menu">
+                    <li groups="base.group_website_designer"><a href="#" data-action="snapshot">Snapshot this Page</a></li>
+                    <li class="divider" groups="base.group_website_designer"> </li>
+                    <li groups="base.group_website_designer"><a data-action="edit_menu" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
                 </ul>
             </li>
     </xpath>
