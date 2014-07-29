@@ -11,7 +11,7 @@
                 </label>
                 <button data-action="save" type="submit" class="btn btn-success">Save</button>
                 <button data-action="format" type="button" class="btn btn-warning">Format</button>
-                <button data-action="close" type="button" class="btn btn-info">Fermer</button>
+                <button data-action="close" type="button" class="btn btn-info">Close</button>
             </div>
             <div id="ace-view-id"/>
             <div id="ace-view-editor"/>

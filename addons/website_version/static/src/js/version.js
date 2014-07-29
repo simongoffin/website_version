@@ -5,6 +5,7 @@
     
     var website=openerp.website;
     website.add_template_file('/website_version/static/src/xml/preview.xml');
+    //website.add_template_file('/website_version/static/src/xml/version_menu.xml');
 
     website.action= {};
 

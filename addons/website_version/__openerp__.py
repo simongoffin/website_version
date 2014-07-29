@@ -14,6 +14,7 @@ OpenERP Website CMS
     'data': [
         'security/ir.model.access.csv',
         'views/website_version_assets.xml',
+        'views/menu.xml',
     ],
     'demo': [],
     'qweb': [],
