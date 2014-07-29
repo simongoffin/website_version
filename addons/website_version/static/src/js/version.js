@@ -43,7 +43,7 @@
                 openerp.jsonRpc( '/request_rpc', 'call', 
                 {'id_seq' : id_seq})
                 .then(function (result) {
-                    location.reload();
+                    //location.reload();
                     console.log(result);
                 })
                 

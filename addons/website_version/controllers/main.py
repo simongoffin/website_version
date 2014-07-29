@@ -30,12 +30,15 @@ class TableExporter(http.Controller):
         master_view=iuv.browse(cr, uid, [id_master], context)[0]
         arch_master=master_view.arch
         master_id_master=master_view.master_id.id
-        print master_view.version_ids
-        iuv.write_simple(cr, uid,[id_view], {
-                                        'arch': arch_master,
-                                        'master_id':master_id_master,
-                                    }, 
-                                    context=context)
+        #print 'view_version_ids={}'.format(view.version_ids[0].id)
+        print 'view_id={}'.format(view.id)
+        print 'view_master_id={}'.format(view.master_id.id)
+        print 'view_master_version_ids={}'.format(view.master_id.version_ids)
+#         iuv.write_simple(cr, uid,[id_view], {
+#                                         'arch': arch_master,
+#                                         'master_id':master_id_master,
+#                                     }, 
+#                                     context=context)
         
         
 #         for old_view in view.version_ids:
