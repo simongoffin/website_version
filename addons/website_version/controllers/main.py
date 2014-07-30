@@ -32,13 +32,13 @@ class TableExporter(http.Controller):
         master_id_master=master_view.master_id.id
         iuv.write_simple(cr, uid,[id_view], {
                                         'arch': arch_master,
-                                        'master_id':master_id_master,
+                                        #'master_id':master_id_master,
                                     }, 
                                     context=context)
         return id_master
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)
-    def get_version(self,id_seq):
+    def get_all_versions(self,id_seq):
         #from pudb import set_trace; set_trace()
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         iuv = request.registry['ir.ui.view']
@@ -50,3 +50,8 @@ class TableExporter(http.Controller):
             result.append(current.master_id.id)
             current=current.master_id
         return result
+        
+    @http.route(['/old_version/<int:value>'], type='json', auth="public", website=True)
+    def get_version(self,value):
+        print 'ID={}'.format(value)
+        return value

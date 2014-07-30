@@ -9,9 +9,9 @@
                     Version <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu oe_content_menu" role="menu">
-                    <li class="snapshot" groups="base.group_website_designer"><a href="#" data-action="snapshot">Snapshot this Page</a></li>
+                    <li groups="base.group_website_designer"><a href="#" data-action="snapshot">Snapshot this Page</a></li>
                     <li class="divider" groups="base.group_website_designer"> </li>
-                    <li groups="base.group_website_designer"><a data-action="edit_menu" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
+                    <li class="snapshot" groups="base.group_website_designer"><a data-action="edit_menu" href="#"><span title="Edit Top Menu">Previous versions</span></a></li>
                 </ul>
             </li>
     </xpath>

@@ -4,7 +4,7 @@
     <t t-name="all_versions">
         <div class="all_versions">
             <t t-foreach="mytab" t-as="item">
-                <p> <t t-esc="item"/> </p>
+                <li><a t-attf-href="/old_version/#{ item }" ><t t-esc="item"></t></a></li>
             </t>
         </div>
     </t>
