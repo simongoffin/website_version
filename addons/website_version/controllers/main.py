@@ -17,7 +17,7 @@ def get_id(seq):
 
 class TableExporter(http.Controller):
     
-    
+    #To go back to old version
     @http.route(['/request_rpc'], type='json', auth="public", website=True)
     def publish(self,id_seq):
         #from pudb import set_trace; set_trace()
@@ -35,9 +35,18 @@ class TableExporter(http.Controller):
                                         'master_id':master_id_master,
                                     }, 
                                     context=context)
-        
-        
-#         for old_view in view.version_ids:
-#             first=old_view
-#             break
         return id_master
+        
+    @http.route(['/all_versions'], type='json', auth="public", website=True)
+    def get_version(self,id_seq):
+        #from pudb import set_trace; set_trace()
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        iuv = request.registry['ir.ui.view']
+        id_view = get_id(id_seq)
+        view=iuv.browse(cr, uid, [id_view], context)[0]
+        current=view
+        result=[]
+        while current.master_id:
+            result.append(current.master_id.id)
+            current=current.master_id
+        return result

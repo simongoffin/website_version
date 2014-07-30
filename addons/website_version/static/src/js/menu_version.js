@@ -8,6 +8,16 @@
     
         website.EditorBarContent.include({
         start: function() {
+            $('#version-menu-button').click(function() {
+                console.log("Version clicked!");
+                var id_seq=$("main").html();
+                openerp.jsonRpc( '/all_versions', 'call', 
+                {'id_seq' : id_seq})
+                .then(function (result) {
+                    console.log(result);
+                })
+                
+            });
             return this._super();
         },
         
