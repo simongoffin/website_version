@@ -14,8 +14,14 @@
                 var id_seq=$("main").html();
                 openerp.jsonRpc( '/all_versions', 'call', 
                 {'id_seq' : id_seq})
+                
                 .then(function (result) {
-                    $( ".snapshot" ).append(QWeb.render("all_versions", {mytab:result}));
+                    if($(".all_versions").length > 0){
+                        $(".all_versions").html().replace(QWeb.render("all_versions", {mytab:result}));
+                    }
+                    else{
+                        $( ".snapshot" ).append(QWeb.render("all_versions", {mytab:result}));
+                    }
                     console.log(result);
                 })
                 
