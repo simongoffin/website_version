@@ -3,10 +3,11 @@
     var _t = openerp._t;
     
     var website=openerp.website;
-    //website.add_template_file('/website_version/static/src/xml/menu_version.xml');
+    var QWeb = openerp.qweb;
+    website.add_template_file('/website_version/static/src/xml/all_versions.xml');
     
     
-        website.EditorBarContent.include({
+    website.EditorBarContent.include({
         start: function() {
             $('#version-menu-button').click(function() {
                 console.log("Version clicked!");
@@ -14,6 +15,7 @@
                 openerp.jsonRpc( '/all_versions', 'call', 
                 {'id_seq' : id_seq})
                 .then(function (result) {
+                    $( ".snapshot" ).append(QWeb.render("all_versions", {mytab:result}));
                     console.log(result);
                 })
                 

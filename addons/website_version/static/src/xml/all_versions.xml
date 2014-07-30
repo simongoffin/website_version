@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+
+    <t t-name="all_versions">
+        <t t-foreach="mytab" t-as="item">
+            <p> <t t-esc="item"/> </p>
+        </t>
+    </t>
+
+
+</templates>
