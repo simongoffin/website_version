@@ -31,29 +31,36 @@
         
         snapshot: function() {
             console.log("Snapshot!");
+//             website.prompt({
+//                 id: "editor_new_page",
+//                 window_title: _t("New snapshot"),
+//                 input: _t("Page Title"),
+//                 init: function () {
+//                     var $group = this.$dialog.find("div.form-group");
+//                     $group.removeClass("mb0");
+// 
+//                     var $add = $(
+//                         '<div class="form-group mb0">'+
+//                             '<label class="col-sm-offset-3 col-sm-9 text-left">'+
+//                             '    <input type="checkbox" checked="checked" required="required"/> '+
+//                             '</label>'+
+//                         '</div>');
+//                     $add.find('label').append(_t("Add page in menu"));
+//                     $group.after($add);
+//                 }
+//             }).then(function (val, field, $dialog) {
+//                 if (val) {
+//                     var url = '/website/add/' + encodeURIComponent(val);
+//                     if ($dialog.find('input[type="checkbox"]').is(':checked')) url +="?add_menu=1";
+//                     document.location = url;
+//                 }
+//             });
             website.prompt({
-                id: "editor_new_page",
+                id: "editor_new_snapshot",
                 window_title: _t("New snapshot"),
-                input: _t("Page Title"),
-                init: function () {
-                    var $group = this.$dialog.find("div.form-group");
-                    $group.removeClass("mb0");
-
-                    var $add = $(
-                        '<div class="form-group mb0">'+
-                            '<label class="col-sm-offset-3 col-sm-9 text-left">'+
-                            '    <input type="checkbox" checked="checked" required="required"/> '+
-                            '</label>'+
-                        '</div>');
-                    $add.find('label').append(_t("Add page in menu"));
-                    $group.after($add);
-                }
-            }).then(function (val, field, $dialog) {
-                if (val) {
-                    var url = '/website/add/' + encodeURIComponent(val);
-                    if ($dialog.find('input[type="checkbox"]').is(':checked')) url +="?add_menu=1";
-                    document.location = url;
-                }
+                input: "Snapshot name",
+            }).then(function (name) {
+                console.log(name);
             });
         },
         
