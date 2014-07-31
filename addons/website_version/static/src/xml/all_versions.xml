@@ -4,7 +4,8 @@
     <t t-name="all_versions">
         <div class="all_versions">
             <t t-foreach="mytab" t-as="item">
-                <li><a t-attf-href="/old_version/#{ item }" ><t t-esc="item"></t></a></li>
+                <!-- <li><a t-attf-href="/old_version/#{ item }" ><t t-esc="item"></t></a></li> -->
+                <li groups="base.group_website_designer"><a href="#" data-action="link_version"><t t-esc="item"></t></a></li>
             </t>
         </div>
     </t>

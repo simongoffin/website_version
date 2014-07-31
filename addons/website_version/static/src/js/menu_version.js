@@ -56,6 +56,11 @@
                 }
             });
         },
+        
+        link_version: function() {
+            var text = $(event.target).text();
+            console.log(text);
+        },
     });
     
     website.ready().done(function() {

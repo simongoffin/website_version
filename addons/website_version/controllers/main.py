@@ -51,7 +51,7 @@ class TableExporter(http.Controller):
             current=current.master_id
         return result
         
-    @http.route(['/old_version/<int:value>'], type='json', auth="public", website=True)
+    @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
     def get_version(self,value):
         print 'ID={}'.format(value)
         return value
