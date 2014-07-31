@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import osv,fields
+from openerp.http import request
 
 
 class ViewVersion(osv.Model):
@@ -23,3 +24,26 @@ class ViewVersion(osv.Model):
         
     def write_simple(self, cr, uid, ids, vals, context=None):
         super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
+        
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        #from pudb import set_trace; set_trace()
+        id_version= 287
+        id_master=287
+        version_arch=super(ViewVersion, self).read(cr, uid, [id_version], fields=['arch'], context=context, load=load)[0].get('arch')
+
+#         xx=super(ViewVersion, self).read(cr, uid, [id_version], fields=fields, context=context, load=load)
+#         yy=super(ViewVersion, self).read(cr, uid, [id_master], fields=fields, context=context, load=load)
+        
+#         version = self.poll['fsqdfsdf']
+#         date_create = ....
+#         new_ids = []
+#         for id in ids:
+#             if id==id_master:
+#                 new_ids.append(id_version)
+#             else:
+#                 new_ids.append(id)
+        all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        for view in all_needed_views:
+            if view.get('id')==id_master and 'arch' in view:
+                view['arch']=version_arch
+        return all_needed_views

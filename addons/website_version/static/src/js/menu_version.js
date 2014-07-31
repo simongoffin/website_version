@@ -70,12 +70,12 @@
             var id_seq=$("main").html();
             openerp.jsonRpc( '/change_version', 'call', 
                 {
-                    'id_seq' : id_seq ,
-                    'id_version' : parseInt(text)
+                    'id_version':parseInt(text),
+                    'id_seq':id_seq
                 })
                 .then(function (result) {
-                    location.reload();
                     console.log(result);
+                    //location.reload();
                 })
         },
     });
