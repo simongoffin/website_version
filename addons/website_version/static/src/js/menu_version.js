@@ -59,7 +59,17 @@
         
         link_version: function() {
             var text = $(event.target).text();
-            console.log(text);
+            console.log('Youp clicked on '+parseInt(text));
+            var id_seq=$("main").html();
+            openerp.jsonRpc( '/change_version', 'call', 
+                {
+                    'id_seq' : id_seq ,
+                    'id_version' : parseInt(text)
+                })
+                .then(function (result) {
+                    location.reload();
+                    console.log(result);
+                })
         },
     });
     

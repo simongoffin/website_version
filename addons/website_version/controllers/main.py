@@ -32,10 +32,23 @@ class TableExporter(http.Controller):
         master_id_master=master_view.master_id.id
         iuv.write_simple(cr, uid,[id_view], {
                                         'arch': arch_master,
-                                        #'master_id':master_id_master,
                                     }, 
                                     context=context)
         return id_master
+        
+    @http.route(['/change_version'], type='json', auth="public", website=True)
+    def publish_version(self,id_seq,id_version):
+        #from pudb import set_trace; set_trace()
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        iuv = request.registry['ir.ui.view']
+        id_view = get_id(id_seq)
+        version=iuv.browse(cr, uid, [id_version], context)[0]
+        arch_version=version.arch
+        iuv.write_simple(cr, uid,[id_view], {
+                                        'arch': arch_version,
+                                    }, 
+                                    context=context)
+        return id_version
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)
     def get_all_versions(self,id_seq):
