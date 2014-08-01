@@ -38,9 +38,10 @@ class TableExporter(http.Controller):
         
     @http.route(['/change_version'], type='json', auth="user", website=True)
     def set_version(self,id_version,id_seq):
+        id_master=get_id(id_seq)
         request.session['id_version']=id_version
-        id_view = get_id(id_seq)
-        return id_view
+        request.session['id_master']=id_master
+        return id_master
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)
     def get_all_versions(self,id_seq):
@@ -48,6 +49,8 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         iuv = request.registry['ir.ui.view']
         id_view = get_id(id_seq)
+#         request.session['id_version']=id_view
+#         request.session['id_master']=id_view
         view=iuv.browse(cr, uid, [id_view], context)[0]
         current=view
         result=[]
