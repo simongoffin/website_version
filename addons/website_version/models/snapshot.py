@@ -7,6 +7,5 @@ class Snapshot(osv.Model):
     
     _columns = {
         'name' : fields.char(string="Title", size=256, required=True),
-        #Relational
-        'view_ids' : fields.many2many('ir.ui.view',string="Snapshot views"),
+        'create_date': fields.datetime('Create Date', readonly=True),
     }

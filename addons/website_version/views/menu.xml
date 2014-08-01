@@ -11,7 +11,7 @@
                 <ul class="dropdown-menu oe_content_menu" role="menu">
                     <li groups="base.group_website_designer"><a href="#" data-action="snapshot">Snapshot this Page</a></li>
                     <li class="divider" groups="base.group_website_designer"> </li>
-                    <li class="snapshot" ><span>Previous versions</span></li>
+                    <li class="snapshot" ><span>Previous snapshot</span></li>
                 </ul>
             </li>
     </xpath>

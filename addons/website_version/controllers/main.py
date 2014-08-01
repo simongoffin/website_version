@@ -43,6 +43,13 @@ class TableExporter(http.Controller):
         request.session['id_master']=id_master
         return id_master
         
+    @http.route(['/create_snapshot'], type='json', auth="user", website=True)
+    def create_snapshot(self,name):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        snap = request.registry['website_version.snapshot']
+        ids=snap.create(cr, uid,{'name':name}, context=context)
+        return name
+        
     @http.route(['/all_versions'], type='json', auth="public", website=True)
     def get_all_versions(self,id_seq):
         #from pudb import set_trace; set_trace()
@@ -58,6 +65,21 @@ class TableExporter(http.Controller):
             result.append(current.master_id.id)
             current=current.master_id
         return result
+    
+    @http.route(['/all_snapshots'], type='json', auth="public", website=True)
+    def get_all_snapshots(self):
+        #from pudb import set_trace; set_trace()
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        snap = request.registry['website_version.snapshot']
+#         request.session['id_version']=id_view
+#         request.session['id_master']=id_view
+        ids=snap.search(cr, uid, [])
+        result=snap.read(cr, uid, ids,['name'])
+        res=[]
+        for ob in result:
+            res.append(ob['name'])
+        print res
+        return res
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
     def get_version(self,value):
