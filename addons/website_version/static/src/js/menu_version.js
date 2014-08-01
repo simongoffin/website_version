@@ -58,16 +58,15 @@
         
         link_version: function() {
             var text = $(event.target).text();
-            console.log('Youp clicked on '+parseInt(text));
-            var id_seq=$("main").html();
-            openerp.jsonRpc( '/change_version', 'call', 
+            console.log('Youp clicked on ' + text);
+            //var id_seq=$("main").html();
+            openerp.jsonRpc( '/change_snapshot', 'call', 
                 {
-                    'id_version':parseInt(text),
-                    'id_seq':id_seq
+                    'snapshot_name':text,
                 })
                 .then(function (result) {
                     console.log(result);
-                    location.reload();
+                    //location.reload();
                 })
         },
     });

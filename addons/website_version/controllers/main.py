@@ -43,6 +43,10 @@ class TableExporter(http.Controller):
         request.session['id_master']=id_master
         return id_master
         
+    @http.route(['/change_snapshot'], type='json', auth="user", website=True)
+    def change_snapshot(self,snapshot_name):
+        return snapshot_name
+        
     @http.route(['/create_snapshot'], type='json', auth="user", website=True)
     def create_snapshot(self,name):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
@@ -74,11 +78,11 @@ class TableExporter(http.Controller):
 #         request.session['id_version']=id_view
 #         request.session['id_master']=id_view
         ids=snap.search(cr, uid, [])
-        result=snap.read(cr, uid, ids,['name'])
+        result=snap.read(cr, uid, ids,['name','create_date'])
         res=[]
         for ob in result:
             res.append(ob['name'])
-        print res
+            print ob['create_date']
         return res
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
