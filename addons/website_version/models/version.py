@@ -59,7 +59,11 @@ class ViewVersion(osv.Model):
              iuv.clear_cache()
 
 #         version_arch=super(ViewVersion, self).read(cr, uid, [id_version], fields=['arch'], context=context, load=load)[0].get('arch')
-# 
+            snap_views=[]
+            all_views=self.browse(cr, uid, ids, context=context)
+            for view in all_views:
+                
+            
             all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             for view in all_needed_views:
                 if view.get('id')==id_master:
