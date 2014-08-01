@@ -55,14 +55,13 @@ class ViewVersion(osv.Model):
         
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         #from pudb import set_trace; set_trace()
-         try :
-             snap_id=request.session.get('snapshot_id')
-             snap = request.registry['website_version.snapshot']
-             snap_date=snap.browse(cr, uid, snap_id, context=context)[0].create_date
-             print 'SNAPSHOT NAME={}'.format(snap.name)
-#             from pudb import set_trace; set_trace()
-             iuv = request.registry['ir.ui.view']
-             iuv.clear_cache()
+        try :
+            snap_id=request.session.get('snapshot_id')
+            snap = request.registry['website_version.snapshot']
+            snap_date=snap.browse(cr, uid, snap_id, context=context)[0].create_date
+            print 'SNAPSHOT NAME={}'.format(snap.name)
+            iuv = request.registry['ir.ui.view']
+            iuv.clear_cache()
 
             #snap_views={}
             snap_ids=[]
@@ -84,8 +83,10 @@ class ViewVersion(osv.Model):
                     snap_trad[copy_id]=[view.id,view.xml_id]
                     
             all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-            all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, [], context=context, load=load)
+            all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=context, load=load)
             for view in all_needed_views_snapshot:
                 view['id']=snap_trad[view['id']][0]
                 view['xml_id']=snap_trad[view['id']][1]
-        return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+            return all_needed_views_snapshot
+        except:
+            return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
