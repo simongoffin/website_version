@@ -35,7 +35,7 @@ class ViewVersion(osv.Model):
             snap_ids=[]
             no_snap_ids=[]
             for original in self.browse(cr, uid, ids, context=context):
-                if original.type == 'qweb' and 'arch' in vals and not 'inherit_id' in vals:
+                if original.type == 'qweb' and 'arch' in vals:
                     check=True
                     for view in snapshot.view_ids:
                         if view.master_id == original.id:
@@ -56,37 +56,36 @@ class ViewVersion(osv.Model):
         
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         #from pudb import set_trace; set_trace()
-#         try :
-#             snapshot_id=request.session.get('snapshot_id')[0]
-#             snap = request.registry['website_version.snapshot']
-#             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
-#             print 'SNAPSHOT NAME={}'.format(snapshot.name)
-#             iuv = request.registry['ir.ui.view']
-#             iuv.clear_cache()
-#             #from pudb import set_trace; set_trace()
-#             #snap_views={}
-#             snap_ids=[]
-#             snap_trad={}
-#             all_views=self.browse(cr, uid, ids, context=context)
-#             for id in ids:
-#                 check=True
-#                 for view in snapshot.view_ids:
-#                     if view.master_id == id:
-#                         current=self.browse(cr, uid, [id], context=context)[0]
-#                         snap_trad[view.id]=[current.id,current.xml_id,current.mode]
-#                         snap_ids.append(view.id)
-#                         check=False
-#                 if check:
-#                     current=self.browse(cr, uid, [id], context=context)[0]
-#                     snap_trad[id]=[current.id,current.xml_id,current.mode]
-#                     snap_ids.append(id)
-#                     
-#             all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-#             all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=context, load=load)
-#             for view in all_needed_views_snapshot:
-#                 view['id']=snap_trad[view['id']][0]
-#                 view['xml_id']=snap_trad[view['id']][1]
-#                 #view['mode']=snap_trad[view['id']][2]
-#             return all_needed_views
-#         except:
-        return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        try :
+            snapshot_id=request.session.get('snapshot_id')[0]
+            snap = request.registry['website_version.snapshot']
+            snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
+            print 'SNAPSHOT NAME={}'.format(snapshot.name)
+            iuv = request.registry['ir.ui.view']
+            iuv.clear_cache()
+            #from pudb import set_trace; set_trace()
+            #snap_views={}
+            snap_ids=[]
+            snap_trad={}
+            for id in ids:
+                check=True
+                for view in snapshot.view_ids:
+                    if view.master_id == id:
+                        current=self.browse(cr, uid, [id], context=context)[0]
+                        snap_trad[id]=[view.arch]
+                        #snap_ids.append(view.id)
+                        check=False
+                if check:
+                    current=self.browse(cr, uid, [id], context=context)[0]
+                    snap_trad[id]=[current.arch]
+                    #snap_ids.append(id)
+                    
+            all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+            #all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=context, load=load)
+            for view in all_needed_views:
+                #view['id']=snap_trad[view['id']][0]
+                view['arch']=snap_trad[view['id']][0]
+                #view['mode']=snap_trad[view['id']][2]
+            return all_needed_views
+        except:
+            return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
