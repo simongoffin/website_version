@@ -21,6 +21,8 @@ class ViewVersion(osv.Model):
 
         try:
             snapshot_id=request.session.get('snapshot_id')[0]
+            if snapshot_id==0:
+                raise 
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
             snap_ids=[]
@@ -46,12 +48,14 @@ class ViewVersion(osv.Model):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         #from pudb import set_trace; set_trace()
         try :
+            iuv = request.registry['ir.ui.view']
+            iuv.clear_cache()
             snapshot_id=request.session.get('snapshot_id')[0]
+            if snapshot_id==0:
+                raise 
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
             print 'SNAPSHOT NAME={}'.format(snapshot.name)
-            iuv = request.registry['ir.ui.view']
-            iuv.clear_cache()
             snap_ids=[]
             snap_trad={}
             for id in ids:
