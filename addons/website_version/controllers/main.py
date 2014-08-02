@@ -55,7 +55,8 @@ class TableExporter(http.Controller):
     def create_snapshot(self,name):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snap = request.registry['website_version.snapshot']
-        ids=snap.create(cr, uid,{'name':name}, context=context)
+        id=snap.create(cr, uid,{'name':name}, context=context)
+        request.session['snapshot_id']=id
         return name
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)
