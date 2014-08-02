@@ -70,21 +70,22 @@ class ViewVersion(osv.Model):
             for id in ids:
                 check=True
                 for view in snapshot.view_ids:
-                    if view.master_id == id:
+                    if view.master_id.id == id:
                         current=self.browse(cr, uid, [id], context=context)[0]
                         snap_trad[id]=[view.arch]
                         #snap_ids.append(view.id)
-                        check=False
-                if check:
-                    current=self.browse(cr, uid, [id], context=context)[0]
-                    snap_trad[id]=[current.arch]
+                        #check=False
+                #if check:
+                    #current=self.browse(cr, uid, [id], context=context)[0]
+                    #snap_trad[id]=[current.arch]
                     #snap_ids.append(id)
                     
             all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             #all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=context, load=load)
             for view in all_needed_views:
+                if view['id'] in snap_trad:
                 #view['id']=snap_trad[view['id']][0]
-                view['arch']=snap_trad[view['id']][0]
+                    view['arch']=snap_trad[view['id']][0]
                 #view['mode']=snap_trad[view['id']][2]
             return all_needed_views
         except:
