@@ -14,12 +14,6 @@ class ViewVersion(osv.Model):
     
     def write(self, cr, uid, ids, vals, context=None):
         #from pudb import set_trace; set_trace()
-#         for view in self.browse(cr, uid, ids, context=context):
-#             if view.type == 'qweb' and 'arch' in vals and not 'inherit_id' in vals:
-#                 copy_id=self.copy(cr,uid,view.id,{})
-#                 #self.write(cr, uid, [copy_id], {'master_id':copy_id})
-#                 super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, view.id)]}, context=context)
-#                 vals['master_id'] = copy_id
         try:
             iter(ids)
         except:
@@ -29,9 +23,6 @@ class ViewVersion(osv.Model):
             snapshot_id=request.session.get('snapshot_id')[0]
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
-            
-            #from pudb import set_trace; set_trace()
-            
             snap_ids=[]
             no_snap_ids=[]
             for original in self.browse(cr, uid, ids, context=context):
@@ -63,8 +54,6 @@ class ViewVersion(osv.Model):
             print 'SNAPSHOT NAME={}'.format(snapshot.name)
             iuv = request.registry['ir.ui.view']
             iuv.clear_cache()
-            #from pudb import set_trace; set_trace()
-            #snap_views={}
             snap_ids=[]
             snap_trad={}
             for id in ids:
@@ -77,15 +66,12 @@ class ViewVersion(osv.Model):
                         check=False
                 if check:
                     snap_ids.append(id)
-                    
-            #all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=context, load=load)
             for view in all_needed_views_snapshot:
                 if view['id'] in snap_trad:
                     view['mode']=snap_trad[view['id']][2]
                     view['xml_id']=snap_trad[view['id']][1]
                     view['id']=snap_trad[view['id']][0]
-                #view['mode']=snap_trad[view['id']][2]
             return all_needed_views_snapshot
         except:
             return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
