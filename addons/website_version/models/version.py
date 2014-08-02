@@ -9,6 +9,7 @@ class ViewVersion(osv.Model):
     _columns = {
         'master_id':fields.many2one('ir.ui.view',string="Source View"),
         'version_ids': fields.one2many('ir.ui.view', 'master_id',string="Old Views",copy=True),
+        'snapshot_id' : fields.many2one('website_version.snapshot',ondelete='cascade', string="Snapshot_id"),
     }
     
     def write(self, cr, uid, ids, vals, context=None):
@@ -25,29 +26,24 @@ class ViewVersion(osv.Model):
             ids=[ids]
 
         try:
-            snap_id=request.session.get('snapshot_id')
+            snapshot_id=request.session.get('snapshot_id')
             snap = request.registry['website_version.snapshot']
-            snap_date=snap.browse(cr, uid, snap_id, context=context)[0].create_date
+            snapshot=snap.browse(cr, uid, snapshot_id, context=context)[0]
             
             #from pudb import set_trace; set_trace()
             
-            vals['create_date']=snap_date
             snap_ids=[]
             no_snap_ids=[]
-            for view in self.browse(cr, uid, ids, context=context):
-                 if view.create_date == snap_date:
+            for id in ids:
+                for view in snapshot.view_ids
+                 if view.master_id == id:
                     snap_ids.append(view.id)
                 else:
-                    check_date=False
-                    for view_version in view.version_ids:
-                        if view_version.create_date==snap_date:
-                            snap_ids.append(view_version.id)
-                            check_date=True
-                    if not check_date:
-                        copy_id=self.copy(cr,uid,view.id,{})
-                        super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':view.id}, context=context)
-                        super(ViewVersion, self).write(cr, uid,[view.id], {'version_ids': [(4, copy_id)]}, context=context)
-                        snap_ids.append(copy_id)
+                    copy_id=self.copy(cr,uid,id,{})
+                    super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=context)
+                    super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
+                    snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
+                    snap_ids.append(copy_id)
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
             
         except:
@@ -56,10 +52,10 @@ class ViewVersion(osv.Model):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         #from pudb import set_trace; set_trace()
         try :
-            snap_id=request.session.get('snapshot_id')
+            snapshot_id=request.session.get('snapshot_id')
             snap = request.registry['website_version.snapshot']
-            snap_date=snap.browse(cr, uid, snap_id, context=context)[0].create_date
-            print 'SNAPSHOT NAME={}'.format(snap.name)
+            snapshot=snap.browse(cr, uid, snapshot_id, context=context)[0]
+            print 'SNAPSHOT NAME={}'.format(snapshot.name)
             iuv = request.registry['ir.ui.view']
             iuv.clear_cache()
 
@@ -67,22 +63,18 @@ class ViewVersion(osv.Model):
             snap_ids=[]
             snap_trad={}
             all_views=self.browse(cr, uid, ids, context=context)
-            for view in all_views:
-                for view_version in view.version_ids:
-                    if view_version.create_date==snap_date:
-                        #snap_views[view.id]=view_version
-                        snap_ids.append(view_version.id)
-                        snap_trad[view_version.id]=[view.id,view.xml_id]
-                        check_date=True
-                if not check_date:
-                    copy_id=self.copy(cr,uid,view.id,{})
-                    super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':view.id}, context=context)
-                    super(ViewVersion, self).write(cr, uid,[view.id], {'version_ids': [(4, copy_id)]}, context=context)
-                    #snap_views[view.id]=self.browse(cr, uid, [copy_id], context=context)[0]
-                    snap_ids.append(copy_id)
-                    snap_trad[copy_id]=[view.id,view.xml_id]
+            for id in ids:
+                for view in snapshot.view_ids:
+                    if view.master_id == id:
+                        current=self.browse(cr, uid, [id], context=context)[0]
+                        snap_trad[view.id]=[current.id,current.xml_id]
+                        snap_ids.append(view.id)
+                    else:
+                        current=self.browse(cr, uid, [id], context=context)[0]
+                        snap_trad[id]=[current.id,current.xml_id]
+                        snap_ids.append(id)
                     
-            all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+            #all_needed_views= super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=context, load=load)
             for view in all_needed_views_snapshot:
                 view['id']=snap_trad[view['id']][0]
