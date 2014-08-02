@@ -34,16 +34,21 @@ class ViewVersion(osv.Model):
             
             snap_ids=[]
             no_snap_ids=[]
-            for id in ids:
-                for view in snapshot.view_ids:
-                 if view.master_id == id:
-                    snap_ids.append(view.id)
+            for original in self.browse(cr, uid, ids, context=context):
+                if original.type == 'qweb' and 'arch' in vals and not 'inherit_id' in vals:
+                    check=True
+                    for view in snapshot.view_ids:
+                        if view.master_id == original.id:
+                            snap_ids.append(view.id)
+                            check=False
+                    if check:
+                        copy_id=self.copy(cr,uid,original.id,{})
+                        super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':original.id,'snapshot_id':snapshot_id}, context=context)
+                        super(ViewVersion, self).write(cr, uid,[original.id], {'version_ids': [(4, copy_id)]}, context=context)
+                        snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
+                        snap_ids.append(copy_id)
                 else:
-                    copy_id=self.copy(cr,uid,id,{})
-                    super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=context)
-                    super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
-                    snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
-                    snap_ids.append(copy_id)
+                    snap_ids.append(original.id)
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
             
         except:
@@ -58,7 +63,7 @@ class ViewVersion(osv.Model):
             print 'SNAPSHOT NAME={}'.format(snapshot.name)
             iuv = request.registry['ir.ui.view']
             iuv.clear_cache()
-
+            #from pudb import set_trace; set_trace()
             #snap_views={}
             snap_ids=[]
             snap_trad={}
@@ -80,6 +85,6 @@ class ViewVersion(osv.Model):
                 view['id']=snap_trad[view['id']][0]
                 view['xml_id']=snap_trad[view['id']][1]
                 view['mode']=snap_trad[view['id']][2]
-            return all_needed_views
+            return all_needed_views_snapshot
         except:
             return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
