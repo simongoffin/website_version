@@ -46,9 +46,12 @@ class ViewVersion(osv.Model):
                     if check:
                         current=self.browse(cr, uid, [id], context=context)
                         result_id=id
-                        while(current.master_id and current.write_date<=snapshot_date):
-                            result_id=current.id
+                        current_date=current.create_date
+                        while(current.master_id):
                             current=current.master_id
+                            if current.create_date<=current_date and current.create_date>=snapshot_date:
+                                result_id=current.id
+                                current_date=current.create_date
                         copy_id=self.copy(cr,uid,result_id,{})
                         super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=context)
                         super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
@@ -91,11 +94,11 @@ class ViewVersion(osv.Model):
                     current_date=current.create_date
                     #from pudb import set_trace; set_trace()
                     while(current.master_id):
-                        if current.create_date>=current_date and current.create_date>=snapshot_date:
+                        current=current.master_id
+                        if current.create_date<=current_date and current.create_date>=snapshot_date:
                             current_date=current.create_date
                             result_id=current.id
                             check_two=False
-                        current=current.master_id
                     if check_two:
                         snap_ids.append(id)
                     else:
