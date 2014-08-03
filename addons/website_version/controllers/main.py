@@ -92,9 +92,12 @@ class TableExporter(http.Controller):
         for ob in result:
             res.append(ob['name'])
             print ob['create_date']
-        if not request.session['snapshot_id']==0:
-            res.append('Master')
-        return res
+        try:
+            if not request.session['snapshot_id']==0:
+                res.append('Master')
+            return res
+        except:
+            return res
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
     def get_version(self,value):
