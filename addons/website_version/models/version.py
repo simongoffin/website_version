@@ -46,7 +46,7 @@ class ViewVersion(osv.Model):
                     if check:
                         current=self.browse(cr, uid, [id], context=context)
                         result_id=id
-                        while(current.master_id):
+                        while(current.master_id and current.master_id.create_date>=snapshot_date):
                             current=current.master_id
                             result_id=current.id
                         copy_id=self.copy(cr,uid,result_id,{})
@@ -88,9 +88,8 @@ class ViewVersion(osv.Model):
                     current=self.browse(cr, uid, [id], context=context)[0]
                     result_id=id
                     check_two=True
-                    current_date=current.create_date
                     #from pudb import set_trace; set_trace()
-                    while(current.master_id):
+                    while(current.master_id and current.master_id.create_date>=snapshot_date):
                         current=current.master_id
                         result_id=current.id
                         check_two=False
