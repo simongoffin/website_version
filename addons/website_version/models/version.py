@@ -22,7 +22,7 @@ class ViewVersion(osv.Model):
         try:
             snapshot_id=request.session['snapshot_id']
             #from pudb import set_trace; set_trace()
-            print 'SNAPSHOT ID={}'.format(snapshot_id)
+            #print 'SNAPSHOT ID={}'.format(snapshot_id)
             if snapshot_id==-1:
                 for id in ids:
                     #from pudb import set_trace; set_trace()
@@ -46,12 +46,9 @@ class ViewVersion(osv.Model):
                     if check:
                         current=self.browse(cr, uid, [id], context=context)
                         result_id=id
-                        current_date=current.create_date
                         while(current.master_id):
                             current=current.master_id
-                            if current.create_date<=current_date and current.create_date>=snapshot_date:
-                                result_id=current.id
-                                current_date=current.create_date
+                            result_id=current.id
                         copy_id=self.copy(cr,uid,result_id,{})
                         super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=context)
                         super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
@@ -70,13 +67,13 @@ class ViewVersion(osv.Model):
             iuv.clear_cache()
             #from pudb import set_trace; set_trace()
             snapshot_id=request.session['snapshot_id']
-            print 'SNAPSHOT ID={}'.format(snapshot_id)
+            #print 'SNAPSHOT ID={}'.format(snapshot_id)
             if snapshot_id==-1:
                 return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
             snapshot_date=snapshot.create_date
-            print 'SNAPSHOT NAME={}'.format(snapshot.name)
+            #print 'SNAPSHOT NAME={}'.format(snapshot.name)
             snap_ids=[]
             snap_trad={}
             for id in ids:
@@ -95,10 +92,8 @@ class ViewVersion(osv.Model):
                     #from pudb import set_trace; set_trace()
                     while(current.master_id):
                         current=current.master_id
-                        if current.create_date<=current_date and current.create_date>=snapshot_date:
-                            current_date=current.create_date
-                            result_id=current.id
-                            check_two=False
+                        result_id=current.id
+                        check_two=False
                     if check_two:
                         snap_ids.append(id)
                     else:

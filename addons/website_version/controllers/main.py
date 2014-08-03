@@ -48,7 +48,7 @@ class TableExporter(http.Controller):
         #from pudb import set_trace; set_trace()
         if snapshot_name=='Master':
             request.session['snapshot_id']=-1
-            print 'SNAPSHOT ID={}'.format(request.session['snapshot_id'])
+            #print 'SNAPSHOT ID={}'.format(request.session['snapshot_id'])
             return 'Master'
         else:
             cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
