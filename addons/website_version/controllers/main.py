@@ -45,14 +45,16 @@ class TableExporter(http.Controller):
         
     @http.route(['/change_snapshot'], type='json', auth="user", website=True)
     def change_snapshot(self,snapshot_name):
+        #from pudb import set_trace; set_trace()
         if snapshot_name=='Master':
-            request.session['snapshot_id']=0
+            request.session['snapshot_id']=-1
+            print 'SNAPSHOT ID={}'.format(request.session['snapshot_id'])
             return 'Master'
         else:
             cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
             snap = request.registry['website_version.snapshot']
             id=snap.search(cr, uid, [('name', '=', snapshot_name)])
-            request.session['snapshot_id']=id
+            request.session['snapshot_id']=id[0]
             return id
         
     @http.route(['/create_snapshot'], type='json', auth="user", website=True)
@@ -93,10 +95,11 @@ class TableExporter(http.Controller):
             res.append(ob['name'])
             print ob['create_date']
         try:
-            if not request.session['snapshot_id']==0:
+            if not request.session['snapshot_id']==-1:
                 res.append('Master')
             return res
         except:
+            request.session['snapshot_id']=0
             return res
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)

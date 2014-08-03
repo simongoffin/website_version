@@ -20,14 +20,18 @@ class ViewVersion(osv.Model):
             ids=[ids]
 
         try:
-            snapshot_id=request.session.get('snapshot_id')[0]
-            if snapshot_id==0:
+            snapshot_id=request.session['snapshot_id']
+            #from pudb import set_trace; set_trace()
+            print 'SNAPSHOT ID={}'.format(snapshot_id)
+            if snapshot_id==-1:
                 for id in ids:
+                    #from pudb import set_trace; set_trace()
                     copy_id=self.copy(cr,uid,id,{})
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
                     vals['master_id'] = copy_id
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
             else:
+                #from pudb import set_trace; set_trace()
                 snap = request.registry['website_version.snapshot']
                 snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
                 snapshot_date=snapshot.create_date
@@ -61,9 +65,11 @@ class ViewVersion(osv.Model):
         try :
             iuv = request.registry['ir.ui.view']
             iuv.clear_cache()
-            snapshot_id=request.session.get('snapshot_id')[0]
-            if snapshot_id==0:
-                raise 
+            #from pudb import set_trace; set_trace()
+            snapshot_id=request.session['snapshot_id']
+            print 'SNAPSHOT ID={}'.format(snapshot_id)
+            if snapshot_id==-1:
+                return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
             snapshot_date=snapshot.create_date
@@ -82,9 +88,11 @@ class ViewVersion(osv.Model):
                     current=self.browse(cr, uid, [id], context=context)[0]
                     result_id=id
                     check_two=True
+                    current_date=current.create_date
                     #from pudb import set_trace; set_trace()
-                    while(current.master_id and check_two):
-                        if current.create_date>=snapshot_date:
+                    while(current.master_id):
+                        if current.create_date>=current_date and current.create_date>=snapshot_date:
+                            current_date=current.create_date
                             result_id=current.id
                             check_two=False
                         current=current.master_id
