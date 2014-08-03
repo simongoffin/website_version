@@ -89,17 +89,17 @@ class TableExporter(http.Controller):
 #         request.session['id_version']=id_view
 #         request.session['id_master']=id_view
         ids=snap.search(cr, uid, [])
-        result=snap.read(cr, uid, ids,['name','create_date'])
+        result=snap.read(cr, uid, ids,['id','name','create_date'])
         res=[]
         for ob in result:
-            res.append(ob['name'])
-            print ob['create_date']
+            if not request.session['snapshot_id']==ob['id']:
+                res.append(ob['name'])
+                #print ob['create_date']
         try:
             if not request.session['snapshot_id']==-1:
                 res.append('Master')
             return res
         except:
-            request.session['snapshot_id']=0
             return res
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
