@@ -20,7 +20,7 @@ class ViewVersion(osv.Model):
             ids=[ids]
 
         try:
-            snapshot_id=request.session.get('snapshot_id')[0]
+            snapshot_id=request.session['snapshot_id']
             if snapshot_id==0:
                 raise 
             snap = request.registry['website_version.snapshot']
@@ -50,7 +50,7 @@ class ViewVersion(osv.Model):
         try :
             iuv = request.registry['ir.ui.view']
             iuv.clear_cache()
-            snapshot_id=request.session.get('snapshot_id')[0]
+            snapshot_id=request.session['snapshot_id']
             if snapshot_id==0:
                 raise 
             snap = request.registry['website_version.snapshot']
