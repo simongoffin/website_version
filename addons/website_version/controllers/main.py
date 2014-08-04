@@ -47,7 +47,7 @@ class TableExporter(http.Controller):
     def change_snapshot(self,snapshot_name):
         #from pudb import set_trace; set_trace()
         if snapshot_name=='Master':
-            request.session['snapshot_id']=-1
+            request.session['snapshot_id']=0
             #print 'SNAPSHOT ID={}'.format(request.session['snapshot_id'])
             return 'Master'
         else:
@@ -91,11 +91,9 @@ class TableExporter(http.Controller):
         ids=snap.search(cr, uid, [])
         result=snap.read(cr, uid, ids,['id','name','create_date'])
         res=[]
+        res.append('Master')
         for ob in result:
-            if not request.session.get('snapshot_id')==ob['id']:
-                res.append(ob['name'])
-        if not request.session.get('snapshot_id')==-1 and not request.session.get('snapshot_id')==None:
-            res.append('Master')
+            res.append(ob['name'])
         return res
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)

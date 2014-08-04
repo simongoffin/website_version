@@ -23,7 +23,7 @@ class ViewVersion(osv.Model):
             snapshot_id=request.session['snapshot_id']
             #from pudb import set_trace; set_trace()
             #print 'SNAPSHOT ID={}'.format(snapshot_id)
-            if snapshot_id==-1:
+            if snapshot_id==0:
                 for id in ids:
                     #from pudb import set_trace; set_trace()
                     copy_id=self.copy(cr,uid,id,{})
@@ -68,7 +68,7 @@ class ViewVersion(osv.Model):
             #from pudb import set_trace; set_trace()
             snapshot_id=request.session['snapshot_id']
             #print 'SNAPSHOT ID={}'.format(snapshot_id)
-            if snapshot_id==-1:
+            if snapshot_id==0:
                 return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
