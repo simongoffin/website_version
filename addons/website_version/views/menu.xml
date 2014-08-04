@@ -6,7 +6,7 @@
     <xpath expr="//li['class=dropdown']" position="after">
             <li class="dropdown" id="version-menu" groups="base.group_website_designer">
                 <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    Version ( <t t-if="request.session.get('snapshot_id')==None">0</t>
+                    Version simple ( <t t-if="request.session.get('snapshot_id')==None">0</t>
                             <t t-if="not request.session.get('snapshot_id')==None">
                                 <t t-esc="request.session.get('snapshot_id')"></t>
                             </t>)<span class="caret"></span>
