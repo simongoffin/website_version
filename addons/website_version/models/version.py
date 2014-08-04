@@ -55,7 +55,7 @@ class ViewVersion(osv.Model):
                 raise 
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
-            print 'SNAPSHOT NAME={}'.format(snapshot.name)
+            #print 'SNAPSHOT NAME={}'.format(snapshot.name)
             snap_ids=[]
             snap_trad={}
             for id in ids:
