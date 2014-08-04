@@ -72,6 +72,7 @@
     });
     
     website.ready().done(function() {
+        //$( ".snapshot_name" ).html().replace('Simon');
         console.log("This is the menu_version!");
     });
     
