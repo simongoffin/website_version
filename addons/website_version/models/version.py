@@ -21,17 +21,13 @@ class ViewVersion(osv.Model):
 
         try:
             snapshot_id=request.session['snapshot_id']
-            #from pudb import set_trace; set_trace()
-            #print 'SNAPSHOT ID={}'.format(snapshot_id)
             if snapshot_id==0:
                 for id in ids:
-                    #from pudb import set_trace; set_trace()
                     copy_id=self.copy(cr,uid,id,{})
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
                     vals['master_id'] = copy_id
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
             else:
-                #from pudb import set_trace; set_trace()
                 snap = request.registry['website_version.snapshot']
                 snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
                 snapshot_date=snapshot.create_date
@@ -54,26 +50,20 @@ class ViewVersion(osv.Model):
                         super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
                         snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
                         snap_ids.append(copy_id)
-
                 super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
-            
         except:
             super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
         
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         #from pudb import set_trace; set_trace()
         try :
-            iuv = request.registry['ir.ui.view']
-            iuv.clear_cache()
-            #from pudb import set_trace; set_trace()
+            self.clear_cache()
             snapshot_id=request.session['snapshot_id']
-            #print 'SNAPSHOT ID={}'.format(snapshot_id)
             if snapshot_id==0:
                 return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
             snapshot_date=snapshot.create_date
-            #print 'SNAPSHOT NAME={}'.format(snapshot.name)
             snap_ids=[]
             snap_trad={}
             for id in ids:
@@ -88,7 +78,6 @@ class ViewVersion(osv.Model):
                     current=self.browse(cr, uid, [id], context=context)[0]
                     result_id=id
                     check_two=True
-                    #from pudb import set_trace; set_trace()
                     while(current.master_id and current.master_id.create_date>=snapshot_date):
                         current=current.master_id
                         result_id=current.id
@@ -107,5 +96,4 @@ class ViewVersion(osv.Model):
                     view['id']=snap_trad[view['id']][0]
             return all_needed_views_snapshot
         except:
-            #request.session['snapshot_id']=0
             return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
