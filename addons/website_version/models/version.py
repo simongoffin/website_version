@@ -14,6 +14,8 @@ class ViewVersion(osv.Model):
     
     def write(self, cr, uid, ids, vals, context=None):
         #from pudb import set_trace; set_trace()
+        if context is None:
+            context = {}
         try:
             iter(ids)
         except:
@@ -22,12 +24,15 @@ class ViewVersion(osv.Model):
             snapshot_id=request.session.get('snapshot_id')
         except:
             snapshot_id=None
-        if snapshot_id:
+        if snapshot_id and not context.get('mykey'):
+            #from pudb import set_trace; set_trace()
+            ctx = dict(context, mykey=True)
             snap = request.registry['website_version.snapshot']
-            snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
+            snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
             snapshot_date=snapshot.create_date
             snap_ids=[]
             no_snap_ids=[]
+            #from pudb import set_trace; set_trace()
             for id in ids:
                 check=True
                 for view in snapshot.view_ids:
@@ -35,22 +40,24 @@ class ViewVersion(osv.Model):
                         snap_ids.append(view.id)
                         check=False
                 if check:
-                    current=self.browse(cr, uid, [id], context=context)
+                    current=self.browse(cr, uid, [id], context=ctx)
                     result_id=id
                     while(current.master_id and current.master_id.create_date>=snapshot_date):
                         current=current.master_id
                         result_id=current.id
-                    copy_id=self.copy(cr,uid,result_id,{})
-                    super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=context)
-                    super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
-                    snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
+                    copy_id=self.copy(cr,uid,result_id,{},context=ctx)
+                    super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=ctx)
+                    super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=ctx)
+                    snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=ctx)
                     snap_ids.append(copy_id)
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
         else:
-            if snapshot_id==0:
+            if snapshot_id==0 and not context.get('mykey'):
+                ctx = dict(context, mykey=True)
+                #from pudb import set_trace; set_trace()
                 for id in ids:
-                    copy_id=self.copy(cr,uid,id,{})
-                    super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
+                    copy_id=self.copy(cr,uid,id,{},context=ctx)
+                    super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=ctx)
                     vals['master_id'] = copy_id
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
             else:
@@ -91,10 +98,10 @@ class ViewVersion(osv.Model):
                     if check_two:
                         snap_ids.append(id)
                     else:
-                        master=self.browse(cr, uid, [id], context=context)[0]
+                        master=self.browse(cr, uid, [id], context=ctx)[0]
                         snap_trad[result_id]=[master.id,master.xml_id,master.mode]
                         snap_ids.append(result_id)
-            all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=context, load=load)
+            all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=ctx, load=load)
             for view in all_needed_views_snapshot:
                 if view['id'] in snap_trad:
                     view['mode']=snap_trad[view['id']][2]
