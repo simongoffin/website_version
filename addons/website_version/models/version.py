@@ -18,9 +18,35 @@ class ViewVersion(osv.Model):
             iter(ids)
         except:
             ids=[ids]
-
         try:
-            snapshot_id=request.session['snapshot_id']
+            snapshot_id=request.session.get('snapshot_id')
+        except:
+            snapshot_id=None
+        if snapshot_id:
+            snap = request.registry['website_version.snapshot']
+            snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
+            snapshot_date=snapshot.create_date
+            snap_ids=[]
+            no_snap_ids=[]
+            for id in ids:
+                check=True
+                for view in snapshot.view_ids:
+                    if view.master_id.id == id:
+                        snap_ids.append(view.id)
+                        check=False
+                if check:
+                    current=self.browse(cr, uid, [id], context=context)
+                    result_id=id
+                    while(current.master_id and current.master_id.create_date>=snapshot_date):
+                        current=current.master_id
+                        result_id=current.id
+                    copy_id=self.copy(cr,uid,result_id,{})
+                    super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=context)
+                    super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
+                    snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
+                    snap_ids.append(copy_id)
+            super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
+        else:
             if snapshot_id==0:
                 for id in ids:
                     copy_id=self.copy(cr,uid,id,{})
@@ -28,39 +54,16 @@ class ViewVersion(osv.Model):
                     vals['master_id'] = copy_id
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
             else:
-                snap = request.registry['website_version.snapshot']
-                snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
-                snapshot_date=snapshot.create_date
-                snap_ids=[]
-                no_snap_ids=[]
-                for id in ids:
-                    check=True
-                    for view in snapshot.view_ids:
-                        if view.master_id.id == id:
-                            snap_ids.append(view.id)
-                            check=False
-                    if check:
-                        current=self.browse(cr, uid, [id], context=context)
-                        result_id=id
-                        while(current.master_id and current.master_id.create_date>=snapshot_date):
-                            current=current.master_id
-                            result_id=current.id
-                        copy_id=self.copy(cr,uid,result_id,{})
-                        super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=context)
-                        super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=context)
-                        snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
-                        snap_ids.append(copy_id)
-                super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
-        except:
-            super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
+                super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
         
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        #from pudb import set_trace; set_trace()
-        try :
-            self.clear_cache()
-            snapshot_id=request.session['snapshot_id']
-            if snapshot_id==0:
-                return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        self.clear_cache()
+        try:
+            snapshot_id=request.session.get('snapshot_id')
+        except:
+            snapshot_id=0
+        if snapshot_id:
+            from pudb import set_trace; set_trace()
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
             snapshot_date=snapshot.create_date
@@ -95,5 +98,5 @@ class ViewVersion(osv.Model):
                     view['xml_id']=snap_trad[view['id']][1]
                     view['id']=snap_trad[view['id']][0]
             return all_needed_views_snapshot
-        except:
+        else:
             return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
