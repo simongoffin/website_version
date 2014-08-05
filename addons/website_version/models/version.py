@@ -57,15 +57,18 @@ class ViewVersion(osv.Model):
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
         
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        if context is None:
+            context = {}
         self.clear_cache()
         try:
             snapshot_id=request.session.get('snapshot_id')
         except:
             snapshot_id=0
-        if snapshot_id:
-            from pudb import set_trace; set_trace()
+        if snapshot_id and not context.get('mykey'):
+            #from pudb import set_trace; set_trace()
             snap = request.registry['website_version.snapshot']
-            snapshot=snap.browse(cr, uid, [snapshot_id], context=context)[0]
+            ctx = dict(context, mykey=True)
+            snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
             snapshot_date=snapshot.create_date
             snap_ids=[]
             snap_trad={}
@@ -73,12 +76,12 @@ class ViewVersion(osv.Model):
                 check=True
                 for view in snapshot.view_ids:
                     if view.master_id.id == id:
-                        master=self.browse(cr, uid, [id], context=context)[0]
-                        snap_trad[view.id]=[master.id,master.xml_id,master.mode]
+                        #master=self.browse(cr, uid, [id], context=context)[0]
+                        snap_trad[view.id]=[view.master_id.id,view.master_id.xml_id,view.master_id.mode]
                         snap_ids.append(view.id)
                         check=False
                 if check:
-                    current=self.browse(cr, uid, [id], context=context)[0]
+                    current=self.browse(cr, uid, [id], context=ctx)[0]
                     result_id=id
                     check_two=True
                     while(current.master_id and current.master_id.create_date>=snapshot_date):
