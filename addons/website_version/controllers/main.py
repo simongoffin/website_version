@@ -107,10 +107,10 @@ class TableExporter(http.Controller):
         for ob in ob_list:
             if not ob.version_ids and not ob.snapshot_id:
                 result+=1
-        snap_id=request.session.get('snapshot_id')
-        if not snap_id==0 and not snap_id==None:
-            #from pudb import set_trace; set_trace()
-            iuv.write_snapshot(cr, uid, snap_id, context=context)
+#         snap_id=request.session.get('snapshot_id')
+#         if not snap_id==0 and not snap_id==None:
+#             #from pudb import set_trace; set_trace()
+#             iuv.write_snapshot(cr, uid, snap_id, context=context)
         return result
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
