@@ -110,3 +110,24 @@ class ViewVersion(osv.Model):
             return all_needed_views_snapshot
         else:
             return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+            
+    def write_snapshot(self, cr, uid, ids, snapshot_id, context=None):
+        ids=self.search(cr, uid, [('type','=','qweb')],context=context)
+        ob_list=iuv.browse(cr, uid, ids, context)
+        master_ids=[]
+        for ob in ob_list:
+            if ob.xml_id:
+                master_ids.append(ob.id)
+        snap = request.registry['website_version.snapshot']
+        snapshot=snap.browse(cr, uid, [snapshot_id], context)[0]
+        for id in master_ids:
+            check=True
+            for view in snapshot.view_ids:
+                if view.master_id==id:
+                    super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch}, context)
+                    check=False
+            if check:
+                current=self.browse(cr, uid, [id], context=ctx)[0]
+                while(current.master_id and current.master_id.create_date>=snapshot.create_date):
+                    current=current.master_id
+                    super(ViewVersion, self).write(cr, uid, id, {'arch':current.arch}, context)
