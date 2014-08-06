@@ -42,10 +42,13 @@ class ViewVersion(osv.Model):
                 if check:
                     current=self.browse(cr, uid, [id], context=ctx)
                     result_id=id
-                    for previous in current.version_ids:
-                        if previous.create_date>=snapshot_date:
-                            result_id=previous.id
-                            break
+                    if current.version_ids:
+                        current_date=current.version_ids[0].create_date
+                        for previous in current.version_ids:
+                            if previous.create_date>=snapshot_date:
+                                #current_date=previous.create_date
+                                result_id=previous.id
+                                break
                     copy_id=self.copy(cr,uid,result_id,{},context=ctx)
                     super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=ctx)
                     super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=ctx)
@@ -90,15 +93,17 @@ class ViewVersion(osv.Model):
                         check=False
                 if check:
                     current=self.browse(cr, uid, [id], context=ctx)[0]
-                    current_date=current.version_ids[0].create_date
                     result_id=id
                     check_two=True
-                    for previous in current.version_ids:
-                        from pudb import set_trace; set_trace()
-                        if previous.create_date>=snapshot_date and previous.create_date<=current_date:
-                            result_id=previous.id
-                            check_two=False
-                            break
+                    if current.version_ids:
+                        current_date=current.version_ids[0].create_date
+                        for previous in current.version_ids:
+                            #from pudb import set_trace; set_trace()
+                            if previous.create_date>=snapshot_date:
+                                #current_date=previous.create_date
+                                result_id=previous.id
+                                check_two=False
+                                break
                     if check_two:
                         snap_ids.append(id)
                     else:
