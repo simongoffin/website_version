@@ -102,7 +102,12 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         iuv = request.registry['ir.ui.view']
         ids=iuv.search(cr, uid, [('type','=','qweb')],context=context)
-        return len(ids)
+        ob_list=iuv.browse(cr, uid, ids, context)
+        result=0
+        for ob in ob_list:
+            if ob.xml_id:
+                result+=1
+        return result
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
     def get_version(self,value):
