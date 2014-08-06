@@ -96,6 +96,14 @@ class TableExporter(http.Controller):
             res.append(ob['name'])
         return res
         
+    @http.route(['/qweb_number'], type='json', auth="public", website=True)
+    def get_qweb_number(self):
+        #from pudb import set_trace; set_trace()
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        iuv = request.registry['ir.ui.view']
+        ids=iuv.search(cr, uid, [('type','=','qweb')],context=context)
+        return len(ids)
+        
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
     def get_version(self,value):
         print 'ID={}'.format(value)

@@ -69,6 +69,15 @@
                     location.reload();
                 })
         },
+        
+        qweb_number: function() {
+            console.log('Youp clicked on Qweb number!');
+            openerp.jsonRpc( '/qweb_number', 'call', 
+                {})
+                .then(function (result) {
+                    console.log(result);
+                })
+        },
     });
     
     website.ready().done(function() {
