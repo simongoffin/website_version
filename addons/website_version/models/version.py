@@ -43,6 +43,7 @@ class ViewVersion(osv.Model):
                     current=self.browse(cr, uid, [id], context=ctx)
                     result_id=id
                     if current.version_ids:
+                        #from pudb import set_trace; set_trace()
                         current_date=current.version_ids[0].create_date
                         for previous in current.version_ids:
                             if previous.create_date>=snapshot_date:
@@ -62,7 +63,7 @@ class ViewVersion(osv.Model):
                 for id in ids:
                     copy_id=self.copy(cr,uid,id,{},context=ctx)
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=ctx)
-                    vals['version_ids'] = [(4, id)]
+                    vals['version_ids'] = [(4, copy_id)]
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
             else:
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
