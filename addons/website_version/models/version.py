@@ -64,6 +64,11 @@ class ViewVersion(osv.Model):
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
         
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+#         try:
+#             if 'False' in fields:
+#                 from pudb import set_trace; set_trace()
+#         except:
+#             print 'ok'
         if context is None:
             context = {}
         self.clear_cache()
