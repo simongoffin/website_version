@@ -64,9 +64,10 @@ class ViewVersion(osv.Model):
                     copy_id=self.copy(cr,uid,id,{},context=ctx)
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=ctx)
                     vals['version_ids'] = [(4, copy_id)]
-                super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
+                super(ViewVersion, self).write(cr, uid, ids, vals, context=ctx)
             else:
-                super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
+                ctx = dict(context, mykey=True)
+                super(ViewVersion, self).write(cr, uid, ids, vals, context=ctx)
         
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if context is None:
