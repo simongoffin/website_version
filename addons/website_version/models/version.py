@@ -111,23 +111,36 @@ class ViewVersion(osv.Model):
         else:
             return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             
-    def write_snapshot(self, cr, uid, ids, snapshot_id, context=None):
+    def write_snapshot(self, cr, uid, snap_id, context=None):
+        #from pudb import set_trace; set_trace()
+        #ctx = dict(context, mykey=True)
         ids=self.search(cr, uid, [('type','=','qweb')],context=context)
-        ob_list=iuv.browse(cr, uid, ids, context)
+        ob_list=self.browse(cr, uid, ids, context=context)
         master_ids=[]
         for ob in ob_list:
-            if ob.xml_id:
+            if not ob.version_ids and not ob.snapshot_id:
                 master_ids.append(ob.id)
+        #from pudb import set_trace; set_trace()
         snap = request.registry['website_version.snapshot']
-        snapshot=snap.browse(cr, uid, [snapshot_id], context)[0]
+        snapshot=snap.browse(cr, uid, [snap_id], context=context)[0]
         for id in master_ids:
             check=True
+            check_b=True
             for view in snapshot.view_ids:
-                if view.master_id==id:
-                    super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch}, context)
+                if view.master_id.id==id:
+                    from pudb import set_trace; set_trace()
+                    copy_id=self.copy(cr,uid,id,{},context=context)
+                    super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
+                    super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch,'master_id':copy_id}, context=context)
                     check=False
             if check:
-                current=self.browse(cr, uid, [id], context=ctx)[0]
+                current=self.browse(cr, uid, [id], context=context)[0]
                 while(current.master_id and current.master_id.create_date>=snapshot.create_date):
                     current=current.master_id
-                    super(ViewVersion, self).write(cr, uid, id, {'arch':current.arch}, context)
+                    check_b=False
+                if check and not check_b:
+                    copy_id=self.copy(cr,uid,id,{},context=context)
+                    super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
+                    super(ViewVersion, self).write(cr, uid, id, {'arch':current.arch,'master_id':copy_id}, context=context)
+                    
+                    
