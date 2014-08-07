@@ -70,12 +70,13 @@
                 })
         },
         
-        qweb_number: function() {
-            console.log('Youp clicked on Qweb number!');
-            openerp.jsonRpc( '/qweb_number', 'call', 
+        write_snapshot: function() {
+            console.log('Youp clicked on Write snapshot!');
+            openerp.jsonRpc( '/write_snapshot', 'call', 
                 {})
                 .then(function (result) {
                     console.log(result);
+                    location.reload();
                 })
         },
     });

@@ -96,7 +96,7 @@ class TableExporter(http.Controller):
             res.append(ob['name'])
         return res
         
-    @http.route(['/qweb_number'], type='json', auth="public", website=True)
+    @http.route(['/write_snapshot'], type='json', auth="public", website=True)
     def get_qweb_number(self):
         #from pudb import set_trace; set_trace()
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
