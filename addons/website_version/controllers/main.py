@@ -105,8 +105,7 @@ class TableExporter(http.Controller):
         ob_list=iuv.browse(cr, uid, ids, context)
         result=0
         for ob in ob_list:
-            if not ob.master_id:
-                result+=1
+            result+=1
         snap_id=request.session.get('snapshot_id')
         if not snap_id==0 and not snap_id==None:
             #from pudb import set_trace; set_trace()

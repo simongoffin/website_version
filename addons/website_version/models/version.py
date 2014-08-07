@@ -131,11 +131,11 @@ class ViewVersion(osv.Model):
         ob_list=self.browse(cr, uid, ids, context=context)
         master_ids=[]
         for ob in ob_list:
-            if not ob.master_id:
-                master_ids.append(ob.id)
+            master_ids.append(ob.id)
         #from pudb import set_trace; set_trace()
         snap = request.registry['website_version.snapshot']
         snapshot=snap.browse(cr, uid, [snap_id], context=context)[0]
+        snapshot_date=snapshot.create_date
         for id in master_ids:
             check=True
             check_b=True
@@ -144,7 +144,7 @@ class ViewVersion(osv.Model):
                     #from pudb import set_trace; set_trace()
                     copy_id=self.copy(cr,uid,id,{'master_id':None,'version_ids':None},context=context)
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=context)
-                    super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch,'version_ids': [(4, id_copy)]}, context=context)
+                    super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch,'version_ids': [(4, copy_id)]}, context=context)
                     check=False
             if check:
                 current=self.browse(cr, uid, [id], context=context)[0]
@@ -155,7 +155,7 @@ class ViewVersion(osv.Model):
                             result_id=previous.id
                             copy_id=self.copy(cr,uid,id,{'master_id':None,'version_ids':None},context=context)
                             super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=context)
-                            super(ViewVersion, self).write(cr, uid, id, {'arch':previous.arch,'version_ids': [(4, id_copy)]}, context=context)
+                            super(ViewVersion, self).write(cr, uid, id, {'arch':previous.arch,'version_ids': [(4, copy_id)]}, context=context)
                             check_b=False
                             break
 #                 if check and check_b:
