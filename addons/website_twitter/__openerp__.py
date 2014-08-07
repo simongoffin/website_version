@@ -13,7 +13,7 @@ Display best tweets
     'data': [
         'security/ir.model.access.csv',
         'data/twitter_data.xml',
-        'views/twitter_view.xml',
+        #'views/twitter_view.xml',
         'views/twitter_snippet.xml'
     ],
     'demo': [],

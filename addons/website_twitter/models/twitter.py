@@ -22,7 +22,24 @@ class TwitterClient(osv.osv):
         'twitter_api_key': fields.char('Twitter API key', help="Twitter API Key"),
         'twitter_api_secret': fields.char('Twitter API secret', help="Twitter API Secret"),
         'twitter_screen_name': fields.char('Get favorites from this screen name'),
+        'twitter_tutorial': fields.dummy(
+                type="boolean", string="Show me how to obtain the Twitter API Key and Secret"),
     }
+
+    def _check_twitter_authorization(self, cr, uid, config_id, context=None):
+        website_obj = self.pool['website']
+        website_config = self.browse(cr, uid, config_id, context=context)
+        try:
+            website_obj.fetch_favorite_tweets(cr, uid, [website_config.website_id.id], context=context)
+        except Exception:
+            _logger.warning('Failed to verify twitter API authorization', exc_info=True)
+            raise osv.except_osv(_('Twitter authorization error!'), _('Please double-check your Twitter API Key and Secret'))
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(twitter_config_settings, self).create(cr, uid, vals, context=context)
+        if vals.get('twitter_api_key') and vals.get('twitter_api_secret'):
+            self._check_twitter_authorization(cr, uid, res_id, context=context)
+        return res_id
 
     def _request(self, website, url, params=None):
         """Send an authenticated request to the Twitter API."""
