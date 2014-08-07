@@ -9,4 +9,4 @@ class Snapshot(osv.Model):
         'name' : fields.char(string="Title", size=256, required=True),
         'view_ids': fields.one2many('ir.ui.view', 'snapshot_id',string="view_ids"),
         'create_date': fields.datetime('Create Date'),
-    }
+    
