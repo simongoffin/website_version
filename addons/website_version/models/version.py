@@ -47,7 +47,6 @@ class ViewVersion(osv.Model):
                         current_date=current.version_ids[0].create_date
                         for previous in current.version_ids:
                             if previous.create_date>=snapshot_date:
-                                #current_date=previous.create_date
                                 result_id=previous.id
                                 break
                     copy_id=self.copy(cr,uid,result_id,{'master_id':None,'version_ids':None},context=ctx)
@@ -89,7 +88,6 @@ class ViewVersion(osv.Model):
                 check=True
                 for view in snapshot.view_ids:
                     if view.master_id.id == id:
-                        #master=self.browse(cr, uid, [id], context=context)[0]
                         snap_trad[view.id]=[view.master_id.id,view.master_id.xml_id,view.master_id.mode]
                         snap_ids.append(view.id)
                         check=False
@@ -102,7 +100,6 @@ class ViewVersion(osv.Model):
                         for previous in current.version_ids:
                             #from pudb import set_trace; set_trace()
                             if previous.create_date>=snapshot_date:
-                                #current_date=previous.create_date
                                 result_id=previous.id
                                 check_two=False
                                 break
@@ -124,7 +121,6 @@ class ViewVersion(osv.Model):
             
     def write_snapshot(self, cr, uid, snap_id, context=None):
         #from pudb import set_trace; set_trace()
-        #ctx = dict(context, mykey=True)
         request.session['snapshot_id']=0
         self.clear_cache()
         ids=self.search(cr, uid, [('type','=','qweb')],context=context)
@@ -158,10 +154,5 @@ class ViewVersion(osv.Model):
                             super(ViewVersion, self).write(cr, uid, id, {'arch':previous.arch,'version_ids': [(4, copy_id)]}, context=context)
                             check_b=False
                             break
-#                 if check and check_b:
-#                     #from pudb import set_trace; set_trace()
-#                     copy_id=self.copy(cr,uid,id,{},context=context)
-#                     super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
-#                     super(ViewVersion, self).write(cr, uid, id, {'arch':current.arch,'master_id':copy_id}, context=context)
                     
                     
