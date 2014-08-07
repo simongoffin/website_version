@@ -149,6 +149,21 @@ class website(osv.osv):
         menu = menus and menus[0] or False
         return dict( map(lambda x: (x, menu), ids) )
 
+    # def _check_twitter_authorization(self, cr, uid, config_id, context=None):
+    #         website_config = self.browse(cr, uid, config_id, context=context)
+    #         try:
+    #             self.fetch_favorite_tweets(cr, uid, [website_config.website_id.id], context=context)
+    #         except Exception:
+    #             _logger.warning('Failed to verify twitter API authorization', exc_info=True)
+    #             raise osv.except_osv(_('Twitter authorization error!'), _('Please double-check your Twitter API Key and Secret'))
+
+    # def create(self, cr, uid, vals, context=None):
+    #     obj_self=self.pool['res.config.settings']
+    #     res_id = obj_self.create(cr, uid, vals, context=context)
+    #     if vals.get('twitter_api_key') and vals.get('twitter_api_secret'):
+    #         obj_self._check_twitter_authorization(cr, uid, res_id, context=context)
+    #     return res_id
+
     _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
     _columns = {

@@ -80,6 +80,14 @@
             <field name="view_mode">list</field>
         </record>
 
+        
+        <menuitem name="website" id="website_menu" sequence="10"
+            parent="base.marketing_reporting_menu" />
+
+        <menuitem action="action_website_menu" id="website_action_menu" parent="website_menu"/>
+
+
+
         <record id="menu_tree" model="ir.ui.view">
             <field name="name">website.menu.tree</field>
             <field name="model">website.menu</field>

@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <!-- Reporting for Marketing -->
-        <menuitem name="Website" id="base.marketing_reporting_website" sequence="10"
-            parent="base.marketing_menu" />
             
         <record id="action_snapshot" model="ir.actions.act_window">
             <field name="name">Snapshot</field>
@@ -16,7 +12,7 @@
         </record>
 
                     
-        <menuitem action="action_snapshot" id="menu_action_snapshot" parent="base.marketing_reporting_website"/>
+        <menuitem action="action_snapshot" id="menu_action_snapshot" parent="website.website_menu"/>
         
         <record model="ir.ui.view" id="snapshot_form_view">
             <field name="name">snapshot.form</field>
