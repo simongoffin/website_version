@@ -101,18 +101,17 @@ class TableExporter(http.Controller):
         #from pudb import set_trace; set_trace()
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         iuv = request.registry['ir.ui.view']
-        iuv.clear_cache()
         ids=iuv.search(cr, uid, [('type','=','qweb')],context=context)
         ob_list=iuv.browse(cr, uid, ids, context)
         result=0
         for ob in ob_list:
             if not ob.master_id:
                 result+=1
-#         snap_id=request.session.get('snapshot_id')
-#         if not snap_id==0 and not snap_id==None:
-#             #from pudb import set_trace; set_trace()
-#             iuv.write_snapshot(cr, uid, snap_id, context=context)
-        return len(ob_list)
+        snap_id=request.session.get('snapshot_id')
+        if not snap_id==0 and not snap_id==None:
+            #from pudb import set_trace; set_trace()
+            iuv.write_snapshot(cr, uid, snap_id, context=context)
+        return result
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
     def get_version(self,value):

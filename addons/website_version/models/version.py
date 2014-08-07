@@ -125,11 +125,14 @@ class ViewVersion(osv.Model):
     def write_snapshot(self, cr, uid, snap_id, context=None):
         #from pudb import set_trace; set_trace()
         #ctx = dict(context, mykey=True)
+        request.session['snapshot_id']=0
+        self.clear_cache()
         ids=self.search(cr, uid, [('type','=','qweb')],context=context)
         ob_list=self.browse(cr, uid, ids, context=context)
         master_ids=[]
         for ob in ob_list:
-            master_ids.append(ob.id)
+            if not ob.master_id:
+                master_ids.append(ob.id)
         #from pudb import set_trace; set_trace()
         snap = request.registry['website_version.snapshot']
         snapshot=snap.browse(cr, uid, [snap_id], context=context)[0]
@@ -139,20 +142,26 @@ class ViewVersion(osv.Model):
             for view in snapshot.view_ids:
                 if view.master_id.id==id:
                     #from pudb import set_trace; set_trace()
-                    copy_id=self.copy(cr,uid,id,{},context=context)
-                    super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
-                    super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch,'master_id':copy_id}, context=context)
+                    copy_id=self.copy(cr,uid,id,{'master_id':None,'version_ids':None},context=context)
+                    super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=context)
+                    super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch,'version_ids': [(4, id_copy)]}, context=context)
                     check=False
             if check:
                 current=self.browse(cr, uid, [id], context=context)[0]
-                while(current.master_id and current.master_id.create_date>=snapshot.create_date):
-                    current=current.master_id
-                    check_b=False
-                    #from pudb import set_trace; set_trace()
-                if check and not check_b:
-                    #from pudb import set_trace; set_trace()
-                    copy_id=self.copy(cr,uid,id,{},context=context)
-                    super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
-                    super(ViewVersion, self).write(cr, uid, id, {'arch':current.arch,'master_id':copy_id}, context=context)
+                if current.version_ids:
+                    current_date=current.version_ids[0].create_date
+                    for previous in current.version_ids:
+                        if previous.create_date>=snapshot_date:
+                            result_id=previous.id
+                            copy_id=self.copy(cr,uid,id,{'master_id':None,'version_ids':None},context=context)
+                            super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=context)
+                            super(ViewVersion, self).write(cr, uid, id, {'arch':previous.arch,'version_ids': [(4, id_copy)]}, context=context)
+                            check_b=False
+                            break
+#                 if check and check_b:
+#                     #from pudb import set_trace; set_trace()
+#                     copy_id=self.copy(cr,uid,id,{},context=context)
+#                     super(ViewVersion, self).write(cr, uid,[copy_id], {'version_ids': [(4, id)]}, context=context)
+#                     super(ViewVersion, self).write(cr, uid, id, {'arch':current.arch,'master_id':copy_id}, context=context)
                     
                     
