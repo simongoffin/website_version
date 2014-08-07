@@ -50,7 +50,7 @@ class ViewVersion(osv.Model):
                                 #current_date=previous.create_date
                                 result_id=previous.id
                                 break
-                    copy_id=self.copy(cr,uid,result_id,{},context=ctx)
+                    copy_id=self.copy(cr,uid,result_id,{'master_id':None,'version_ids':None},context=ctx)
                     super(ViewVersion, self).write(cr, uid, copy_id, {'master_id':id,'snapshot_id':snapshot_id}, context=ctx)
                     super(ViewVersion, self).write(cr, uid,[id], {'version_ids': [(4, copy_id)]}, context=ctx)
                     snap.write(cr, uid,[snapshot_id], {'view_ids': [(4, copy_id)]}, context=ctx)
@@ -61,7 +61,7 @@ class ViewVersion(osv.Model):
                 ctx = dict(context, mykey=True)
                 #from pudb import set_trace; set_trace()
                 for id in ids:
-                    copy_id=self.copy(cr,uid,id,{},context=ctx)
+                    copy_id=self.copy(cr,uid,id,{'master_id':None,'version_ids':None},context=ctx)
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=ctx)
                     vals['version_ids'] = [(4, copy_id)]
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=ctx)
