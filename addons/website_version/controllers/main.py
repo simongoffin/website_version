@@ -69,8 +69,9 @@ class TableExporter(http.Controller):
             iuv = request.registry['ir.ui.view']
             date=snap.browse(cr, uid, [snapshot_id], context)[0].create_date
             new_snapshot_id=snap.create(cr, uid,{'name':name,'create_date':date}, context=context)
-            from pudb import set_trace; set_trace()
+            #from pudb import set_trace; set_trace()
             iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
+            request.session['snapshot_id']=new_snapshot_id
         return name
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)

@@ -117,7 +117,8 @@ class ViewVersion(osv.Model):
                     view['id']=snap_trad[view['id']][0]
             return all_needed_views_snapshot
         else:
-            return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+            ctx = dict(context, mykey=True)
+            return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=ctx, load=load)
             
     def write_snapshot(self, cr, uid, snap_id, context=None):
         #from pudb import set_trace; set_trace()
@@ -156,17 +157,19 @@ class ViewVersion(osv.Model):
                             break
 
     def copy_snapshot(self,cr, uid, snapshot_id,new_snapshot_id, context=None):
-        from pudb import set_trace; set_trace()
+        #from pudb import set_trace; set_trace()
         if context is None:
             context = {}
+        ctx = dict(context, mykey=True)
         snap = request.registry['website_version.snapshot']
-        snapshot=snap.browse(cr, uid, [snapshot_id],context)[0]
+        snapshot=snap.browse(cr, uid, [snapshot_id],ctx)[0]
         #new_snapshot=snap.browse(cr, uid, [new_snapshot_id], context=ctx)[0]
         for view in snapshot.view_ids:
-            copy_id=self.copy(cr,uid,view.id,{'master_id':None,'version_ids':None},context=context)
-            super(ViewVersion, self).write(cr, uid, [copy_id], {'master_id':view.master_id.id,'snapshot_id':new_snapshot_id}, context=context)
-            super(ViewVersion, self).write(cr, uid,[view.master_id.id], {'version_ids': [(4, copy_id)]}, context=context)
-            snap.write(cr, uid,[new_snapshot_id], {'view_ids': [(4, copy_id)]}, context=context)
+            master_id=view.master_id.id
+            copy_id=self.copy(cr,uid,view.id,{'master_id':None,'version_ids':None},context=ctx)
+            super(ViewVersion, self).write(cr, uid, [copy_id], {'master_id':master_id,'snapshot_id':new_snapshot_id}, context=ctx)
+            super(ViewVersion, self).write(cr, uid,[master_id], {'version_ids': [(4, copy_id)]}, context=ctx)
+            snap.write(cr, uid,[new_snapshot_id], {'view_ids': [(4, copy_id)]}, context=ctx)
                 
 
 
