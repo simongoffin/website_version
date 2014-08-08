@@ -238,12 +238,12 @@ class website(osv.osv):
 
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded
-        ids=self.search(cr, uid, [])
-        domain_list=self.read(cr, uid, ids,['domain'])
-        for domain in domain_list:
-            if domain in request.url:
-                print 'ok'
-        return self.pool['website'].browse(cr, uid, 1, context=context)
+        ids=self.search(cr, uid, [], context=context)
+        websites = self.browse(cr, uid, ids, context=context)
+        for website in websites:
+            if website.domain in request.url:
+                return website
+        return websites[0]
 
     def is_publisher(self, cr, uid, ids, context=None):
         Access = self.pool['ir.model.access']
