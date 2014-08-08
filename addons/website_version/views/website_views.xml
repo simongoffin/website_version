@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_website_form_extend"> 
+            <field name="name">website.form</field>
+            <field name="model">website</field> 
+            <field name="inherit_id" ref="website.view_website_form"/>
+            <field name="arch" type="xml">
+                <!-- find field name, and insert field name before it -->
+                <field name="company_id" position="after">
+                    <field name="snapshot_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
