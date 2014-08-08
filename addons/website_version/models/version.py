@@ -72,9 +72,12 @@ class ViewVersion(osv.Model):
         if context is None:
             context = {}
         self.clear_cache()
-        try:
-            snapshot_id=request.session.get('snapshot_id')
-        except:
+        # try:
+        #     snapshot_id=request.session.get('snapshot_id')
+        # except:
+        #     snapshot_id=0
+        snapshot_id=context.get('snapshot_id')
+        if snapshot_id==None:
             snapshot_id=0
         if snapshot_id and not context.get('mykey'):
             #from pudb import set_trace; set_trace()
@@ -154,5 +157,3 @@ class ViewVersion(osv.Model):
                             super(ViewVersion, self).write(cr, uid, id, {'arch':previous.arch,'version_ids': [(4, copy_id)]}, context=context)
                             check_b=False
                             break
-                    
-                    

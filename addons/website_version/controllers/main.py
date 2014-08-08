@@ -45,6 +45,7 @@ class TableExporter(http.Controller):
 
         if snapshot_name=='Master':
             request.session['snapshot_id']=0
+            #request.context['snapshot_id']=0
             #web
             #request.session['website_%s_snapshot_id'%(my_website.id)]=0
             return 'Master'
@@ -53,6 +54,7 @@ class TableExporter(http.Controller):
             snap = request.registry['website_version.snapshot']
             id=snap.search(cr, uid, [('name', '=', snapshot_name)])
             request.session['snapshot_id']=id[0]
+            #request.context['snapshot_id']=id[0]
             #web
             #request.session['website_%s_snapshot_id'%(my_website.id)]=id[0]
             return id
@@ -63,6 +65,7 @@ class TableExporter(http.Controller):
         snap = request.registry['website_version.snapshot']
         id=snap.create(cr, uid,{'name':name}, context=context)
         request.session['snapshot_id']=id
+        #request.context['snapshot_id']=id
         return name
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)
