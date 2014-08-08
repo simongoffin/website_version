@@ -6,6 +6,9 @@ from openerp.http import request
 class NewWebsite(osv.Model):
     _inherit = "website"
 
+    _columns = {
+        'snapshot_id':fields.many2one("website_version.snapshot",string="Snapshot"),
+    }
 
     def get_current_snapshot(self,cr,uid,context=None):
         id=request.session.get('snapshot_id')

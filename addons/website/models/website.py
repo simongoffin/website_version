@@ -238,10 +238,12 @@ class website(osv.osv):
 
     def get_current_website(self, cr, uid, context=None):
         # TODO: Select website, currently hard coded
+        #from pudb import set_trace; set_trace()
         ids=self.search(cr, uid, [], context=context)
+        url = request.httprequest.url
         websites = self.browse(cr, uid, ids, context=context)
         for website in websites:
-            if website.domain in request.url:
+            if website.name in url:
                 return website
         return websites[0]
 
