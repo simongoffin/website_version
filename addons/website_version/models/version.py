@@ -155,7 +155,7 @@ class ViewVersion(osv.Model):
                             check_b=False
                             break
 
-    def copy_snapshot(cr, uid, snapshot_id,new_snapshot_id, context=None):
+    def copy_snapshot(self,cr, uid, snapshot_id,new_snapshot_id, context=None):
         from pudb import set_trace; set_trace()
         if context is None:
             context = {}
