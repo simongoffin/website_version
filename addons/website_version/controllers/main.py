@@ -44,7 +44,7 @@ class TableExporter(http.Controller):
         #my_website = website_object.get_current_website(self, cr, uid, context=None)
 
         if snapshot_name=='Master':
-            request.session['snapshot_id']=0
+            request.session['snapshot_id']='Master'
             #request.context['snapshot_id']=0
             #web
             #request.session['website_%s_snapshot_id'%(my_website.id)]=0

@@ -24,7 +24,7 @@ class ViewVersion(osv.Model):
             snapshot_id=request.session.get('snapshot_id')
         except:
             snapshot_id=None
-        if snapshot_id and not context.get('mykey'):
+        if snapshot_id and not context.get('mykey') and not snapshot_id=='Master':
             #from pudb import set_trace; set_trace()
             ctx = dict(context, mykey=True)
             snap = request.registry['website_version.snapshot']
@@ -56,7 +56,7 @@ class ViewVersion(osv.Model):
                     snap_ids.append(copy_id)
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
         else:
-            if snapshot_id==0 and not context.get('mykey'):
+            if snapshot_id=='Master' and not context.get('mykey'):
                 ctx = dict(context, mykey=True)
                 #from pudb import set_trace; set_trace()
                 for id in ids:
@@ -77,9 +77,10 @@ class ViewVersion(osv.Model):
         # except:
         #     snapshot_id=0
         snapshot_id=context.get('snapshot_id')
+        #print '*****'+str(snapshot_id)+'*****'
         if snapshot_id==None:
-            snapshot_id=0
-        if snapshot_id and not context.get('mykey'):
+            snapshot_id='Master'
+        if snapshot_id and not context.get('mykey') and not snapshot_id=='Master':
             #from pudb import set_trace; set_trace()
             snap = request.registry['website_version.snapshot']
             ctx = dict(context, mykey=True)
@@ -124,7 +125,7 @@ class ViewVersion(osv.Model):
             
     def write_snapshot(self, cr, uid, snap_id, context=None):
         #from pudb import set_trace; set_trace()
-        request.session['snapshot_id']=0
+        request.session['snapshot_id']='Master'
         self.clear_cache()
         ids=self.search(cr, uid, [('type','=','qweb')],context=context)
         ob_list=self.browse(cr, uid, ids, context=context)

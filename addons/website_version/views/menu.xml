@@ -6,10 +6,9 @@
     <xpath expr="//li['class=dropdown']" position="after">
             <li class="dropdown" id="version-menu" groups="base.group_website_designer">
                 <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    Version optimale ( <t t-if="request.session.get('snapshot_id')==None or request.session.get('snapshot_id')==0">Master</t>
-                            <t t-if="not request.session.get('snapshot_id')==None and not request.session.get('snapshot_id')==0">
+                    Version optimale (
                                 <t t-esc="website.get_current_snapshot()"></t>
-                            </t>)<span class="caret"></span>
+                            )<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu oe_content_menu" role="menu">
                     <li groups="base.group_website_designer"><a href="#" data-action="snapshot">Create a new snapshot</a></li>
