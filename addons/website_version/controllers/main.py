@@ -58,14 +58,22 @@ class TableExporter(http.Controller):
             #web
             #request.session['website_%s_snapshot_id'%(my_website.id)]=id[0]
             return id
-        
+
     @http.route(['/create_snapshot'], type='json', auth="user", website=True)
     def create_snapshot(self,name):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snap = request.registry['website_version.snapshot']
-        id=snap.create(cr, uid,{'name':name}, context=context)
-        request.session['snapshot_id']=id
-        #request.context['snapshot_id']=id
+        snapshot_id=request.session.get('snapshot_id')
+        if snapshot_id=='Master' or snapshot_id==None:
+            new_snapshot_id=snap.create(cr, uid,{'name':name}, context=context)
+            request.session['snapshot_id']=new_snapshot_id
+        else:
+            iuv = request.registry['ir.ui.view']
+            date=snap.browse(cr, uid, [snapshot_id], context)[0].create_date
+            new_snapshot_id=snap.create(cr, uid,{'name':name,'create_date':date}, context=context)
+            #from pudb import set_trace; set_trace()
+            iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
+            request.session['snapshot_id']=new_snapshot_id
         return name
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)
