@@ -158,3 +158,19 @@ class ViewVersion(osv.Model):
                             super(ViewVersion, self).write(cr, uid, id, {'arch':previous.arch,'version_ids': [(4, copy_id)]}, context=context)
                             check_b=False
                             break
+
+    def copy_snapshot(self,cr, uid, snapshot_id,new_snapshot_id, context=None):
+        #from pudb import set_trace; set_trace()
+        if context is None:
+            context = {}
+        ctx = dict(context, mykey=True)
+        snap = request.registry['website_version.snapshot']
+        snapshot=snap.browse(cr, uid, [snapshot_id],ctx)[0]
+        #new_snapshot=snap.browse(cr, uid, [new_snapshot_id], context=ctx)[0]
+        for view in snapshot.view_ids:
+            master_id=view.master_id.id
+            copy_id=self.copy(cr,uid,view.id,{'master_id':None,'version_ids':None},context=ctx)
+            super(ViewVersion, self).write(cr, uid, [copy_id], {'master_id':master_id,'snapshot_id':new_snapshot_id}, context=ctx)
+            super(ViewVersion, self).write(cr, uid,[master_id], {'version_ids': [(4, copy_id)]}, context=ctx)
+            snap.write(cr, uid,[new_snapshot_id], {'view_ids': [(4, copy_id)]}, context=ctx)
+                
