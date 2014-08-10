@@ -20,12 +20,15 @@ class ViewVersion(osv.Model):
             iter(ids)
         except:
             ids=[ids]
-        try:
-            snapshot_id=request.session.get('snapshot_id')
-        except:
-            snapshot_id=None
+        # try:
+        #     snapshot_id=request.session.get('snapshot_id')
+        # except:
+        #     snapshot_id=None
+        snapshot_id=context.get('snapshot_id')
+        if snapshot_id==None:
+            snapshot_id='Master'
         if snapshot_id and not context.get('mykey') and not snapshot_id=='Master':
-            #from pudb import set_trace; set_trace()
+            from pudb import set_trace; set_trace()
             ctx = dict(context, mykey=True)
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
@@ -56,7 +59,12 @@ class ViewVersion(osv.Model):
                     snap_ids.append(copy_id)
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
         else:
-            if snapshot_id=='Master' and not context.get('mykey'):
+            try:
+                intro=True
+                test=request.session['snapshot_id']
+            except:
+                intro=False    
+            if snapshot_id=='Master' and not context.get('mykey')and intro:
                 ctx = dict(context, mykey=True)
                 #from pudb import set_trace; set_trace()
                 for id in ids:
