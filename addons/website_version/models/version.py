@@ -125,28 +125,27 @@ class ViewVersion(osv.Model):
     #To make a snapshot in master
     def write_snapshot(self, cr, uid, snap_id, context=None):
         #from pudb import set_trace; set_trace()
+        request.session['snapshot_id']='Master'
         self.clear_cache()
-        #To get all qweb views
         ids=self.search(cr, uid, [('type','=','qweb')],context=context)
         ob_list=self.browse(cr, uid, ids, context=context)
         master_ids=[]
         for ob in ob_list:
             master_ids.append(ob.id)
+        #from pudb import set_trace; set_trace()
         snap = request.registry['website_version.snapshot']
         snapshot=snap.browse(cr, uid, [snap_id], context=context)[0]
         snapshot_date=snapshot.create_date
-        from pudb import set_trace; set_trace()
         for id in master_ids:
             check=True
             check_b=True
-            #We write snapshot's view in corresponding master view and we duplicate these master views
             for view in snapshot.view_ids:
                 if view.master_id.id==id:
+                    #from pudb import set_trace; set_trace()
                     copy_id=self.copy(cr,uid,id,{'master_id':None,'version_ids':None},context=context)
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=context)
                     super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch,'version_ids': [(4, copy_id)]}, context=context)
                     check=False
-            #We get all views not changed in the snapshot but corresponding to the create date of the snapshot
             if check:
                 current=self.browse(cr, uid, [id], context=context)[0]
                 if current.version_ids:

@@ -13,8 +13,6 @@
                 <ul class="dropdown-menu oe_content_menu" role="menu">
                     <li groups="base.group_website_designer"><a href="#" data-action="snapshot">Create a new snapshot</a></li>
                     <li class="divider" groups="base.group_website_designer"> </li>
-                    <li groups="base.group_website_designer"><a href="#" data-action="write_snapshot">Write snapshot</a></li>
-                    <li class="divider" groups="base.group_website_designer"> </li>
                     <li class="snapshot" ><span>All snapshots</span></li>
                 </ul>
             </li>
