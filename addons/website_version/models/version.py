@@ -125,7 +125,6 @@ class ViewVersion(osv.Model):
     #To make a snapshot in master
     def write_snapshot(self, cr, uid, snap_id, context=None):
         #from pudb import set_trace; set_trace()
-        request.session['snapshot_id']='Master'
         self.clear_cache()
         #To get all qweb views
         ids=self.search(cr, uid, [('type','=','qweb')],context=context)
@@ -136,6 +135,7 @@ class ViewVersion(osv.Model):
         snap = request.registry['website_version.snapshot']
         snapshot=snap.browse(cr, uid, [snap_id], context=context)[0]
         snapshot_date=snapshot.create_date
+        from pudb import set_trace; set_trace()
         for id in master_ids:
             check=True
             check_b=True

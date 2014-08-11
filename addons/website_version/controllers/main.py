@@ -64,8 +64,7 @@ class TableExporter(http.Controller):
     def create_snapshot(self,name):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         if name=="":
-            a=datetime.datetime.now()
-            name="%s %s:%s:%s" % (str(a.date()),a.hour,a.minute, a.second)
+            name=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         snap = request.registry['website_version.snapshot']
         snapshot_id=request.session.get('snapshot_id')
         if snapshot_id=='Master' or snapshot_id==None:
@@ -125,6 +124,7 @@ class TableExporter(http.Controller):
         if not snap_id=='Master' and not snap_id==None:
             #from pudb import set_trace; set_trace()
             iuv.write_snapshot(cr, uid, snap_id, context=context)
+            request.session['snapshot_id']='Master'
         return result
         
     @http.route(['/old_version/<value>'], type='http', auth="public", website=True)
