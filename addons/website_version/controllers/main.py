@@ -4,6 +4,7 @@ import simplejson
 from openerp.http import request, serialize_exception as _serialize_exception
 from cStringIO import StringIO
 from collections import deque
+import datetime
 
 def get_id(seq):
     debut='data-oe-id="'
@@ -60,6 +61,8 @@ class TableExporter(http.Controller):
     @http.route(['/create_snapshot'], type='json', auth="user", website=True)
     def create_snapshot(self,name):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        if name=="":
+            name=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         snap = request.registry['website_version.snapshot']
         snapshot_id=request.session.get('snapshot_id')
         if snapshot_id==0 or snapshot_id==None:
