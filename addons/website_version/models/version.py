@@ -24,26 +24,26 @@ class ViewVersion(osv.Model):
             snapshot_id=request.session.get('snapshot_id')
         except:
             snapshot_id=None
+        #We write in a snapshot
         if snapshot_id and not context.get('mykey') and not snapshot_id=='Master':
-            #from pudb import set_trace; set_trace()
             ctx = dict(context, mykey=True)
             snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
             snapshot_date=snapshot.create_date
             snap_ids=[]
             no_snap_ids=[]
-            #from pudb import set_trace; set_trace()
             for id in ids:
                 check=True
+                #The view corresponding to id is in the snapshot
                 for view in snapshot.view_ids:
                     if view.master_id.id == id:
                         snap_ids.append(view.id)
                         check=False
+                #The view corresponding to id must be duplicated and inserted in the snapshot
                 if check:
                     current=self.browse(cr, uid, [id], context=ctx)
                     result_id=id
                     if current.version_ids:
-                        #from pudb import set_trace; set_trace()
                         current_date=current.version_ids[0].create_date
                         for previous in current.version_ids:
                             if previous.create_date>=snapshot_date:
@@ -56,6 +56,7 @@ class ViewVersion(osv.Model):
                     snap_ids.append(copy_id)
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
         else:
+            # We write in master
             if snapshot_id=='Master' and not context.get('mykey'):
                 ctx = dict(context, mykey=True)
                 #from pudb import set_trace; set_trace()
@@ -65,6 +66,7 @@ class ViewVersion(osv.Model):
                     vals['version_ids'] = [(4, copy_id)]
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=ctx)
             else:
+                # We launch the application
                 ctx = dict(context, mykey=True)
                 super(ViewVersion, self).write(cr, uid, ids, vals, context=ctx)
         
@@ -72,29 +74,25 @@ class ViewVersion(osv.Model):
         if context is None:
             context = {}
         self.clear_cache()
-        # try:
-        #     snapshot_id=request.session.get('snapshot_id')
-        # except:
-        #     snapshot_id=0
         snapshot_id=context.get('snapshot_id')
-        #print '*****'+str(snapshot_id)+'*****'
         if snapshot_id==None:
             snapshot_id='Master'
-        if snapshot_id and not context.get('mykey') and not snapshot_id=='Master':
-            #from pudb import set_trace; set_trace()
-            snap = request.registry['website_version.snapshot']
+        if not context.get('mykey') and not snapshot_id=='Master':
             ctx = dict(context, mykey=True)
+            snap = request.registry['website_version.snapshot']
             snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
             snapshot_date=snapshot.create_date
             snap_ids=[]
             snap_trad={}
             for id in ids:
                 check=True
+                #The view corresponding to id is in the snapshot
                 for view in snapshot.view_ids:
                     if view.master_id.id == id:
                         snap_trad[view.id]=[view.master_id.id,view.master_id.xml_id,view.master_id.mode]
                         snap_ids.append(view.id)
                         check=False
+                #The view corresponding to id must be found with its create_date
                 if check:
                     current=self.browse(cr, uid, [id], context=ctx)[0]
                     result_id=id
@@ -102,11 +100,11 @@ class ViewVersion(osv.Model):
                     if current.version_ids:
                         current_date=current.version_ids[0].create_date
                         for previous in current.version_ids:
-                            #from pudb import set_trace; set_trace()
                             if previous.create_date>=snapshot_date:
                                 result_id=previous.id
                                 check_two=False
                                 break
+                    #The view corresponding to id is in master
                     if check_two:
                         snap_ids.append(id)
                     else:
@@ -114,6 +112,7 @@ class ViewVersion(osv.Model):
                         snap_trad[result_id]=[master.id,master.xml_id,master.mode]
                         snap_ids.append(result_id)
             all_needed_views_snapshot= super(ViewVersion, self).read(cr, uid, snap_ids, fields=fields, context=ctx, load=load)
+
             for view in all_needed_views_snapshot:
                 if view['id'] in snap_trad:
                     view['mode']=snap_trad[view['id']][2]
@@ -123,29 +122,31 @@ class ViewVersion(osv.Model):
         else:
             return super(ViewVersion, self).read(cr, uid, ids, fields=fields, context=context, load=load)
             
+    #To make a snapshot in master
     def write_snapshot(self, cr, uid, snap_id, context=None):
         #from pudb import set_trace; set_trace()
         request.session['snapshot_id']='Master'
         self.clear_cache()
+        #To get all qweb views
         ids=self.search(cr, uid, [('type','=','qweb')],context=context)
         ob_list=self.browse(cr, uid, ids, context=context)
         master_ids=[]
         for ob in ob_list:
             master_ids.append(ob.id)
-        #from pudb import set_trace; set_trace()
         snap = request.registry['website_version.snapshot']
         snapshot=snap.browse(cr, uid, [snap_id], context=context)[0]
         snapshot_date=snapshot.create_date
         for id in master_ids:
             check=True
             check_b=True
+            #We write snapshot's view in corresponding master view and we duplicate these master views
             for view in snapshot.view_ids:
                 if view.master_id.id==id:
-                    #from pudb import set_trace; set_trace()
                     copy_id=self.copy(cr,uid,id,{'master_id':None,'version_ids':None},context=context)
                     super(ViewVersion, self).write(cr, uid,[copy_id], {'master_id': id}, context=context)
                     super(ViewVersion, self).write(cr, uid, id, {'arch':view.arch,'version_ids': [(4, copy_id)]}, context=context)
                     check=False
+            #We get all views not changed in the snapshot but corresponding to the create date of the snapshot
             if check:
                 current=self.browse(cr, uid, [id], context=context)[0]
                 if current.version_ids:
@@ -158,7 +159,7 @@ class ViewVersion(osv.Model):
                             super(ViewVersion, self).write(cr, uid, id, {'arch':previous.arch,'version_ids': [(4, copy_id)]}, context=context)
                             check_b=False
                             break
-
+    #To make a snapshot of a snapshot
     def copy_snapshot(self,cr, uid, snapshot_id,new_snapshot_id, context=None):
         #from pudb import set_trace; set_trace()
         if context is None:
@@ -166,7 +167,6 @@ class ViewVersion(osv.Model):
         ctx = dict(context, mykey=True)
         snap = request.registry['website_version.snapshot']
         snapshot=snap.browse(cr, uid, [snapshot_id],ctx)[0]
-        #new_snapshot=snap.browse(cr, uid, [new_snapshot_id], context=ctx)[0]
         for view in snapshot.view_ids:
             master_id=view.master_id.id
             copy_id=self.copy(cr,uid,view.id,{'master_id':None,'version_ids':None},context=ctx)

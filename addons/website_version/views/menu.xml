@@ -15,7 +15,7 @@
                     <li class="divider" groups="base.group_website_designer"> </li>
                     <li groups="base.group_website_designer"><a href="#" data-action="write_snapshot">Write snapshot</a></li>
                     <li class="divider" groups="base.group_website_designer"> </li>
-                    <li class="snapshot" ><span>Previous snapshot</span></li>
+                    <li class="snapshot" ><span>All snapshots</span></li>
                 </ul>
             </li>
     </xpath>
