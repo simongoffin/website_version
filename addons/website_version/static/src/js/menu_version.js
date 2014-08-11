@@ -56,7 +56,7 @@
             });
         },
         
-        link_version: function() {
+        change_snapshot: function() {
             var text = $(event.target).text();
             console.log('Youp clicked on ' + text);
             //var id_seq=$("main").html();
@@ -75,16 +75,6 @@
             console.log('Youp clicked on ' + text);
             //var id_seq=$("main").html();
             openerp.jsonRpc( '/delete_snapshot', 'call', 
-                {})
-                .then(function (result) {
-                    console.log(result);
-                    location.reload();
-                })
-        },
-        
-        write_snapshot: function() {
-            console.log('Youp clicked on Write snapshot!');
-            openerp.jsonRpc( '/write_snapshot', 'call', 
                 {})
                 .then(function (result) {
                     console.log(result);
