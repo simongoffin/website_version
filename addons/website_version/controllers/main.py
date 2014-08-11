@@ -78,6 +78,20 @@ class TableExporter(http.Controller):
             iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
             request.session['snapshot_id']=new_snapshot_id
         return name
+
+    @http.route(['/delete_snapshot'], type='json', auth="user", website=True)
+    def delete_snapshot(self):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        #from pudb import set_trace; set_trace()
+        snap = request.registry['website_version.snapshot']
+        snapshot_id=request.session.get('snapshot_id')
+        if not snapshot_id=='Master':
+            name=snap.browse(cr,uid,[snapshot_id],context=context).name
+            snap.unlink(cr, uid, [snapshot_id], context=context)
+            request.session['snapshot_id']='Master'
+        else:
+            name="nothing"
+        return name
         
     @http.route(['/all_versions'], type='json', auth="public", website=True)
     def get_all_versions(self,id_seq):
