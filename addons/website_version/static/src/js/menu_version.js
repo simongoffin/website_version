@@ -11,9 +11,11 @@
         start: function() {
 
             var _get_context = website.get_context;
+            var version_name=$(".version_name").html();
+            //console.log(version_name)
             website.get_context = function (dict) {
                 return _.extend({
-                    'test_id': 1
+                    'version_name': version_name
                 }, _get_context(dict));
             };
 

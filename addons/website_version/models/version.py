@@ -20,15 +20,14 @@ class ViewVersion(osv.Model):
             iter(ids)
         except:
             ids=[ids]
-        try:
-            snapshot_id=request.session.get('snapshot_id')
-        except:
-            snapshot_id=None
+        
         #We write in a snapshot
-        print "WRITE CONTEXT ID={}".format(context.get('test_id'))
-        if snapshot_id and not context.get('mykey') and not snapshot_id=='Master':
+        version_name=context.get('version_name')
+        print "VERSION NAME={}".format(version_name)
+        if version_name and not context.get('mykey') and not version_name=='Master':
             ctx = dict(context, mykey=True)
             snap = request.registry['website_version.snapshot']
+            snapshot_id=snap.search(cr, uid, [('name','=',version_name),])[0]
             snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
             snapshot_date=snapshot.create_date
             snap_ids=[]
@@ -58,7 +57,7 @@ class ViewVersion(osv.Model):
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=context)
         else:
             # We write in master
-            if snapshot_id=='Master' and not context.get('mykey'):
+            if version_name=='Master' and not context.get('mykey'):
                 ctx = dict(context, mykey=True)
                 #from pudb import set_trace; set_trace()
                 for id in ids:
