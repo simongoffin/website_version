@@ -25,7 +25,7 @@ class ViewVersion(osv.Model):
         except:
             snapshot_id=None
         #We write in a snapshot
-        print "WRITE CONTEXT ID={}".format(context.get('snapshot_id'))
+        print "WRITE CONTEXT ID={}".format(context.get('test_id'))
         if snapshot_id and not context.get('mykey') and not snapshot_id=='Master':
             ctx = dict(context, mykey=True)
             snap = request.registry['website_version.snapshot']
@@ -76,7 +76,7 @@ class ViewVersion(osv.Model):
             context = {}
         self.clear_cache()
         snapshot_id=context.get('snapshot_id')
-        print "READ CONTEXT ID={}".format(context.get('snapshot_id'))
+        #print "READ CONTEXT ID={}".format(context.get('snapshot_id'))
         if snapshot_id==None:
             snapshot_id='Master'
         if not context.get('mykey') and not snapshot_id=='Master':

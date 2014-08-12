@@ -9,6 +9,14 @@
     
     website.EditorBarContent.include({
         start: function() {
+
+            var _get_context = website.get_context;
+            website.get_context = function (dict) {
+                return _.extend({
+                    'test_id': 1
+                }, _get_context(dict));
+            };
+
             $('#version-menu-button').click(function() {
                 openerp.jsonRpc( '/all_snapshots', 'call', 
                 {})
@@ -61,31 +69,7 @@
                     location.reload();
                 })
         },
-
         
-    });
-
-    website.EditorBar.include({
-        start: function () {
-            return this._super();
-        },
-        save: function () {
-            console.log("Press!")
-            openerp.jsonRpc( '/set_context', 'call', 
-                {})
-            .then(function (result) {console.log(result);})
-            this._super();
-        },
-
-        // saveElement: function () {
-
-        //     openerp.jsonRpc( '/set_context', 'call', 
-        //         {})
-        //         .then(function (result) {
-        //             console.log(result);
-        //         })
-        //     this._super();
-        // },
     });
 
     
