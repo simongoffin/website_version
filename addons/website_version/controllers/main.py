@@ -13,7 +13,7 @@ class TableExporter(http.Controller):
         #from pudb import set_trace; set_trace()
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         #website_object = request.registry['website']
-        #my_website = website_object.get_current_website(self, cr, uid, context=None)
+        #my_website = website_object.get_current_website(self, cr, uid, context=context)
 
         if snapshot_name=='Master':
             request.session['snapshot_id']='Master'
@@ -22,7 +22,7 @@ class TableExporter(http.Controller):
         else:
             cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
             snap = request.registry['website_version.snapshot']
-            id=snap.search(cr, uid, [('name', '=', snapshot_name)])
+            id=snap.search(cr, uid, [('name', '=', snapshot_name)],context=context)
             request.session['snapshot_id']=id[0]
             #request.session['website_%s_snapshot_id'%(my_website.id)]=id[0]
             return id
@@ -39,7 +39,7 @@ class TableExporter(http.Controller):
             request.session['snapshot_id']=new_snapshot_id
         else:
             iuv = request.registry['ir.ui.view']
-            date=snap.browse(cr, uid, [snapshot_id], context)[0].create_date
+            date=snap.browse(cr, uid, [snapshot_id], context=context)[0].create_date
             new_snapshot_id=snap.create(cr, uid,{'name':name,'create_date':date}, context=context)
             iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
             request.session['snapshot_id']=new_snapshot_id
@@ -63,9 +63,18 @@ class TableExporter(http.Controller):
         cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
         snap = request.registry['website_version.snapshot']
         ids=snap.search(cr, uid, [])
-        result=snap.read(cr, uid, ids,['id','name','create_date'])
+        result=snap.read(cr, uid, ids,['id','name','create_date'],context=context)
         res=[]
         res.append('Master')
         for ob in result:
             res.append(ob['name'])
         return res
+
+
+    @http.route(['/set_context'], type='json', auth="public", website=True)
+    def set_context(self):
+        cr, uid, context = request.cr, openerp.SUPERUSER_ID, request.context
+        snapshot_id=request.session.get('snapshot_id')
+        print 'OK={}'.format(snapshot_id)
+        
+        return snapshot_id

@@ -7,7 +7,7 @@
             <li class="dropdown" id="version-menu" groups="base.group_website_designer">
                 <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
                     Version (
-                                <t t-esc="website.get_current_snapshot()"></t>
+                                <t t-esc="website.get_current_snapshot(context=context)"></t>
                             )<span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu oe_content_menu" role="menu">

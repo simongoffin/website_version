@@ -61,7 +61,33 @@
                     location.reload();
                 })
         },
+
+        
     });
+
+    website.EditorBar.include({
+        start: function () {
+            return this._super();
+        },
+        save: function () {
+            console.log("Press!")
+            openerp.jsonRpc( '/set_context', 'call', 
+                {})
+            .then(function (result) {console.log(result);})
+            this._super();
+        },
+
+        // saveElement: function () {
+
+        //     openerp.jsonRpc( '/set_context', 'call', 
+        //         {})
+        //         .then(function (result) {
+        //             console.log(result);
+        //         })
+        //     this._super();
+        // },
+    });
+
     
     website.ready().done(function() {
     });
