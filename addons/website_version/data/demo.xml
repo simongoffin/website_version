@@ -32,11 +32,11 @@
         	<field name="website_id" ref="website.second_website"/>
         </record>
 
-        <record id="homepage_0_0_0_0" model="ir.ui.view">
+        <record id="homepage_0_0_0_0_other" model="ir.ui.view">
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
-            <field name="master_id" ref="website.homepage"/>
-            <!-- <field name="key">website.homepage</field> -->
+            <field name="master_id" ref="website.homepage_0_0_0_0_master"/>
+            <field name="key">website.homepage</field>
             <field name="snapshot_id" ref="snapshot_0_0_0_0"/>
             <field name="website_id" ref="website.second_website"/>
             <field name="priority">29</field>
@@ -79,11 +79,39 @@
             </field>
         </record>
 
+        <record id="homepage_localhost_master" model="ir.ui.view">
+            <field name="name">Homepage</field>
+            <field name="type">qweb</field>
+            <field name="key">website.homepage</field>
+            <field name="website_id" ref="website.default_website"/>
+            <field name="priority">29</field>
+            <field name="arch">
+                <![CDATA[
+                <t name="Homepage" priority="29" t-name="website.homepage">
+                  <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+                      <section>
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <h1 class="text-center">Localhost</h1>
+                              <h3 class="text-muted text-center">And a great subtitle too</h3>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </t>
+                </t>
+                ]]>
+            </field>
+        </record>
+
         <record id="homepage_localhost" model="ir.ui.view">
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
-            <field name="master_id" ref="website.homepage"/>
-            <!-- <field name="key">website.homepage</field> -->
+            <field name="master_id" ref="homepage_localhost_master"/>
+            <field name="key">website.homepage</field>
             <field name="snapshot_id" ref="snapshot_localhost"/>
             <field name="website_id" ref="website.default_website"/>
             <field name="priority">29</field>
@@ -129,8 +157,8 @@
         <record id="homepage_default_2" model="ir.ui.view">
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
-            <field name="master_id" ref="website.homepage"/>
-            <!-- <field name="key">website.homepage</field> -->
+            <field name="master_id" ref="website.homepage_0_0_0_0_master"/>
+            <field name="key">website.homepage</field>
             <field name="snapshot_id" ref="default_2"/>
             <field name="website_id" ref="website.second_website"/>
             <field name="priority">29</field>
