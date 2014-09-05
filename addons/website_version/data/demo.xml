@@ -26,56 +26,9 @@
             <field name="snapshot_id" ref="snapshot_0_0_0_0"/>
         </record>
 
-        <record id="website.homepage_0_0_0_0_master" model="ir.ui.view">
-            <field name="name">Homepage</field>
-            <field name="type">qweb</field>
-            <field name="key">website.homepage</field>
-            <field name="website_id" ref="website.second_website"/>
-            <field name="master_id" ref="website.homepage"/>
-            <field name="priority">29</field>
-            <field name="arch">
-                <![CDATA[
-                <t name="Homepage" priority="29" t-name="website.homepage">
-                  <t t-call="website.layout">
-                    <div id="wrap" class="oe_structure oe_empty">
-                      <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
-                        <ol class="carousel-indicators hidden">
-                          <li class="active" data-slide-to="0" data-target="#myCarousel0"/>
-                        </ol>
-                        <div class="carousel-inner">
-                          <div class="item image_text oe_img_bg active" style="background-image: url(http://0.0.0.0:8069/website/static/src/img/banner/mountains.jpg);">
-                            <div class="container">
-                              <div class="row content">
-                                <div class="carousel-content col-md-6 col-sm-12">
-                                  <h2>Homepage 0.0.0.0</h2>
-                                  <h3>Click to customize this text</h3>
-                                  <p>
-                                    <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
-                                  </p>
-                                </div>
-                                <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
-                          <i class="fa fa-chevron-left"/>
-                        </div>
-                        <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
-                          <i class="fa fa-chevron-right"/>
-                        </div>
-                      </div>
-                    </div>
-                  </t>
-                </t>
-                ]]>
-            </field>
-        </record>
-
         <record id="homepage_0_0_0_0_other" model="ir.ui.view">
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
-            <field name="master_id" ref="website.homepage_0_0_0_0_master"/>
             <field name="key">website.homepage</field>
             <field name="snapshot_id" ref="snapshot_0_0_0_0"/>
             <field name="website_id" ref="website.second_website"/>
@@ -119,28 +72,9 @@
             </field>
         </record>
 
-        <record id="homepage_localhost_master" model="ir.ui.view">
-            <field name="name">Homepage</field>
-            <field name="type">qweb</field>
-            <field name="key">website.homepage</field>
-            <field name="website_id" ref="website.default_website"/>
-            <field name="master_id" ref="website.homepage"/>
-            <field name="priority">29</field>
-            <field name="arch">
-                <![CDATA[
-                <t name="Homepage" priority="29" t-name="website.homepage">
-                    <t t-call="website.layout">
-                      <div id="wrap" class="oe_structure oe_empty"/>
-                    </t>
-                </t>
-                ]]>
-            </field>
-        </record>
-
         <record id="homepage_localhost" model="ir.ui.view">
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
-            <field name="master_id" ref="homepage_localhost_master"/>
             <field name="key">website.homepage</field>
             <field name="snapshot_id" ref="snapshot_localhost"/>
             <field name="website_id" ref="website.default_website"/>
@@ -187,7 +121,6 @@
         <record id="homepage_default_2" model="ir.ui.view">
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
-            <field name="master_id" ref="website.homepage_0_0_0_0_master"/>
             <field name="key">website.homepage</field>
             <field name="snapshot_id" ref="default_2"/>
             <field name="website_id" ref="website.second_website"/>

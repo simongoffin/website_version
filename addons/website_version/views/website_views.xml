@@ -34,11 +34,9 @@
                  <field name="name" position="after">
                     <!-- <field name="snapshot_id" attrs="{'invisible': [('master_id', '!=', True)]}"/> -->
                     <field name="snapshot_id"/> 
-                    <field name="master_id"/>
                 </field>
 
                 <group position="before">
-                    <field name="master_id" invisible="True"/>
                     <button icon="gtk-ok" name="action_publish" string="Publish" type="object" class="oe_highlight"  
                         context="{'active_id': active_id}" attrs="{'invisible': [('type', '!=', 'qweb')]}" />
                 </group>

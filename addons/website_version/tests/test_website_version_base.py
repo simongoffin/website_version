@@ -12,7 +12,7 @@ class TestWebsiteVersionBase(common.TransactionCase):
         self.website = self.registry('website')
 
         #Usefull objects
-        master_view_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'homepage_0_0_0_0_master')
+        master_view_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website', 'homepage_0_0_0_0')
         self.master_view_id = master_view_ref and master_view_ref[1] or False
         self.arch_master=self.ir_ui_view.browse(cr, uid, [self.master_view_id], context=None)[0].arch
         snapshot_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'website_version', 'snapshot_0_0_0_0')
