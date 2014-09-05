@@ -7,8 +7,8 @@ class ViewVersion(osv.Model):
     _inherit = "ir.ui.view"
     
     _columns = {
-        'master_id':fields.many2one('ir.ui.view',string="Source View"),
-        'version_ids': fields.one2many('ir.ui.view', 'master_id',string="Old Views"),
+        'master_id':fields.many2one('ir.ui.view', ondelete='cascade', string="Source View"),
+        'version_ids': fields.one2many('ir.ui.view', 'master_id', string="Old Views"),
         'snapshot_id' : fields.many2one('website_version.snapshot',ondelete='cascade', string="Snapshot_id"),
     }
 
@@ -61,7 +61,7 @@ class ViewVersion(osv.Model):
                     current = self.browse(cr, uid, [id], context=ctx)[0]
                     #To have a master view for this website
                     if not current.website_id:
-                        id = self.copy(cr,uid, id,{'website_id':website_id},context=ctx)
+                        id = self.copy(cr,uid, id,{'master_id': id, 'website_id':website_id},context=ctx)
                     copy_id=self.copy(cr,uid, id,{'master_id': id,'version_ids': None, 'snapshot_id':snapshot_id, 'website_id':website_id},context=ctx)
                     snap_ids.append(copy_id)
             super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=ctx)
