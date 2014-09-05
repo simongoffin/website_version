@@ -140,18 +140,15 @@ class ViewVersion(osv.Model):
         all_snapshots = snap.browse(cr, uid, all_snapshot_ids, context=context)
         view_id = context.get('active_id')
         view = self.browse(cr, uid, [view_id],ctx)[0]
-        if view.master_id:
-            master_id = view.master_id.id
+        key = view.key
+        deleted_ids = self.search(cr, uid, [('key','=',key),('website_id','!=',False)],context=context)
+        if view.website_id:
+            master_id = self.search(cr, uid, [('key','=',key),('website_id','=',False),('snapshot_id','=',False)],context=context)[0]
+            deleted_ids.remove(view.id)
             super(ViewVersion, self).write(cr, uid,[master_id], {'arch': view.arch}, context=ctx)
-            for snapshot in all_snapshots:
-                for view_s in snapshot.view_ids:
-                    if view_s.master_id.id == master_id and not view_s.id==view.id :
-                        self.unlink(cr, uid, [view_s.id], context=context)
+            self.unlink(cr, uid, deleted_ids, context=context)
         else:
-            for snapshot in all_snapshots:
-                for view_s in snapshot.view_ids:
-                    if view_s.master_id.id == view_id:
-                        self.unlink(cr, uid, [view_s.id], context=context)
+            self.unlink(cr, uid, deleted_ids, context=context)
 
         
                 

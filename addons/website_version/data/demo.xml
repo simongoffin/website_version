@@ -36,6 +36,7 @@
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
             <field name="master_id" ref="website.homepage"/>
+            <!-- <field name="key">website.homepage</field> -->
             <field name="snapshot_id" ref="snapshot_0_0_0_0"/>
             <field name="website_id" ref="website.second_website"/>
             <field name="priority">29</field>
@@ -82,6 +83,7 @@
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
             <field name="master_id" ref="website.homepage"/>
+            <!-- <field name="key">website.homepage</field> -->
             <field name="snapshot_id" ref="snapshot_localhost"/>
             <field name="website_id" ref="website.default_website"/>
             <field name="priority">29</field>
@@ -128,6 +130,7 @@
             <field name="name">Homepage</field>
             <field name="type">qweb</field>
             <field name="master_id" ref="website.homepage"/>
+            <!-- <field name="key">website.homepage</field> -->
             <field name="snapshot_id" ref="default_2"/>
             <field name="website_id" ref="website.second_website"/>
             <field name="priority">29</field>
