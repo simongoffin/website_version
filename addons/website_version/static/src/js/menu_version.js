@@ -61,12 +61,6 @@
                 });
         },
 
-        experiment: function(event) {
-            openerp.jsonRpc( '/experiment', 'call', {}).then(function (result) {
-                    location.reload();
-                });
-        },
-
         delete_snapshot: function(event) {
             var text = $(event.target).text();
             openerp.jsonRpc( '/delete_snapshot', 'call', {}).then(function (result) {

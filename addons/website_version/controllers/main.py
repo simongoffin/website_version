@@ -8,22 +8,11 @@ class TableExporter(http.Controller):
     @http.route(['/change_snapshot'], type = 'json', auth = "user", website = True)
     def change_snapshot(self, snapshot_id):
         request.session['snapshot_id'] = int(snapshot_id)
-        request.session['Master'] = 0
-        request.session['Experiment'] = 0
         return snapshot_id
 
     @http.route(['/master'], type = 'json', auth = "user", website = True)
     def master(self):
-        request.session['Master'] = 1
         request.session['snapshot_id'] = 0
-        request.session['Experiment'] = 0
-        return 0
-
-    @http.route(['/experiment'], type = 'json', auth = "user", website = True)
-    def experiment(self):
-        request.session['Master'] = 0
-        request.session['snapshot_id'] = 0
-        request.session['Experiment'] = 1
         return 0
 
     @http.route(['/create_snapshot'], type = 'json', auth = "user", website = True)

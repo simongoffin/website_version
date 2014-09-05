@@ -6,16 +6,12 @@
         <template id="user_navbar_version" inherit_id="website.layout" groups="base.group_user">
             <xpath expr="//li['class=dropdown']" position="after">
                     <li class="dropdown" id="version-menu" groups="base.group_website_designer">
-                        <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]" t-att-data-experiment_id="website.get_current_experiment(context=context)">
+                        <a id="version-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#" t-att-data-snapshot_id="website.get_current_snapshot(context=context)[0]">
                             Version (
                                         <span><t t-esc="website.get_current_snapshot(context=context)[1]"></t></span>
                                     )<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu version_menu" role="menu">
-                            <t t-if="website.experiment_id">
-                                <li><a href="#" data-action="experiment">Experiment</a></li>
-                                <li class="divider"> </li>
-                            </t>
                             <li><a href="#" data-action="master">Master</a></li>
                             <li class="divider"> </li>
                             <li><a href="#" data-action="create_snapshot">Create a new snapshot</a></li>

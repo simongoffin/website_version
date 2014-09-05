@@ -25,18 +25,6 @@ class ViewVersion(osv.Model):
             iter(ids)
         except:
             ids=[ids]
-
-        experiment_id=context.get('experiment_id')
-        if experiment_id and not context.get('mykey'):
-            #from pudb import set_trace; set_trace()
-            ctx = dict(context, mykey=True)
-            exp = self.pool['website_version.experiment']
-            experiment=exp.browse(cr, uid, [experiment_id], context=ctx)[0]
-            for page_exp in experiment.experiment_page_ids:
-                for id in ids:
-                    if id in page_exp.view_id:
-                        #from pudb import set_trace; set_trace()
-                        context = dict(context, snapshot_id=page_exp.snapshot_id.id)
         
         #We write in a snapshot
         snapshot_id=context.get('snapshot_id')
@@ -72,17 +60,7 @@ class ViewVersion(osv.Model):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if context is None:
             context = {}
-        self.clear_cache()
-
-        experiment_id=context.get('experiment_id')
-        if experiment_id and not context.get('mykey'):
-            ctx = dict(context, mykey=True)
-            exp = self.pool['website_version.experiment']
-            experiment=exp.browse(cr, uid, [experiment_id], context=ctx)[0]
-            for page_exp in experiment.experiment_page_ids:
-                for id in ids:
-                    if id in page_exp.view_id:
-                        context = dict(context, snapshot_id=page_exp.snapshot_id.id) 
+        self.clear_cache() 
 
         snapshot_id=context.get('snapshot_id')
         website_id=context.get('website_id')

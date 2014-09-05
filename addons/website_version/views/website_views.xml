@@ -8,7 +8,6 @@
             <field name="arch" type="xml">
                 <!-- find field name, and insert field name before it -->
                 <field name="company_id" position="after">
-                    <field name="experiment_id"/>
                     <field name="company_id"/>
                     <field name="user_id" context="{'active_test': False}"/>
                 </field>

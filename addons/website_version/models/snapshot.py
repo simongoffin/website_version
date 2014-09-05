@@ -9,7 +9,6 @@ class Snapshot(osv.Model):
         'name' : fields.char(string="Title", required=True),
         'view_ids': fields.one2many('ir.ui.view', 'snapshot_id',string="view_ids",copy=True),
         'website_id': fields.many2one('website',ondelete='cascade', string="Website"),
-        'experiment_id' : fields.many2one('website_version.experiment',ondelete='cascade', string="Experiement_id"),
         'create_date': fields.datetime('Create Date'),
     }
 
