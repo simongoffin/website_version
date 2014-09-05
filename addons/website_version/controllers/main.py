@@ -8,11 +8,13 @@ class TableExporter(http.Controller):
     @http.route(['/change_snapshot'], type = 'json', auth = "user", website = True)
     def change_snapshot(self, snapshot_id):
         request.session['snapshot_id'] = int(snapshot_id)
+        request.session['master'] = 0
         return snapshot_id
 
     @http.route(['/master'], type = 'json', auth = "user", website = True)
     def master(self):
         request.session['snapshot_id'] = 0
+        request.session['master'] = 1
         return 0
 
     @http.route(['/create_snapshot'], type = 'json', auth = "user", website = True)
@@ -30,6 +32,7 @@ class TableExporter(http.Controller):
             new_snapshot_id = snap.create(cr, uid,{'name':name, 'website_id':website_id}, context=context)
             iuv.copy_snapshot(cr, uid, snapshot_id,new_snapshot_id,context=context)
         request.session['snapshot_id'] = new_snapshot_id
+        request.session['master'] = 0
         return name
 
     @http.route(['/delete_snapshot'], type = 'json', auth = "user", website = True)
@@ -38,14 +41,11 @@ class TableExporter(http.Controller):
         snap = request.registry['website_version.snapshot']
         snapshot_id = context.get('snapshot_id')
         website_id = request.website.id
-        id_master = snap.search(cr, uid, [('name', '=', 'Default_'+str(website_id))],context=context)[0]
         if snapshot_id:
             name = snap.browse(cr,uid,[snapshot_id],context=context).name
             snap.unlink(cr, uid, [snapshot_id], context=context)
-            if snapshot_id==id_master:
-                request.session['snapshot_id'] = 0
-            else:
-                request.session['snapshot_id'] = id_master
+            request.session['snapshot_id'] = 0
+            request.session['master'] = 1
         else:
             name = "nothing to do"
         return name

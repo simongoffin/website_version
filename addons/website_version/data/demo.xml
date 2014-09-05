@@ -129,20 +129,9 @@
             <field name="arch">
                 <![CDATA[
                 <t name="Homepage" priority="29" t-name="website.homepage">
-                  <t t-call="website.layout">
-                    <div id="wrap" class="oe_structure oe_empty">
-                      <section>
-                        <div class="container">
-                          <div class="row">
-                            <div class="col-md-12">
-                              <h1 class="text-center">Localhost</h1>
-                              <h3 class="text-muted text-center">And a great subtitle too</h3>
-                            </div>
-                          </div>
-                        </div>
-                      </section>
-                    </div>
-                  </t>
+                    <t t-call="website.layout">
+                      <div id="wrap" class="oe_structure oe_empty"/>
+                    </t>
                 </t>
                 ]]>
             </field>
