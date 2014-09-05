@@ -45,7 +45,7 @@ class NewWebsite(osv.Model):
 
         #key = 'website_%s_snapshot_id' % request.website.id
         if request.session.get('snapshot_id'):
-            request.context['snapshot_id'] = request.session.get(key)
+            request.context['snapshot_id'] = request.session.get('snapshot_id')
         elif request.session.get('Master'):
             request.context['snapshot_id'] = 0
         elif website.experiment_id and request.session.get('Experiment'):
