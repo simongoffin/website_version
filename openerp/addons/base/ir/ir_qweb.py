@@ -240,7 +240,7 @@ class QWeb(orm.AbstractModel):
         context = context or qwebcontext.context           
         website_id=context.get('website_id')
         if website_id:
-            id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id),'|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)[0]
+            id_or_xml_id=self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), ('snapshot_id', '=', False), '|',('website_id','=',website_id),('website_id','=',False)], order='website_id', limit=1, context=context)[0]
 
 
         qwebcontext['__template__'] = id_or_xml_id
