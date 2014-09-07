@@ -14,6 +14,34 @@ class ViewVersion(osv.Model):
         ('key_website_id_uniq', 'unique(key, snapshot_id, website_id)',
             'Key must be unique per snapshot.'),
     ]
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        try:
+            iter(ids)
+        except:
+            ids=[ids]
+        
+        snapshot_id=context.get('snapshot_id')
+
+        if snapshot_id and not context.get('mykey'):
+            ctx = dict(context, mykey=True)
+            snap = self.pool['website_version.snapshot']
+            snapshot=snap.browse(cr, uid, [snapshot_id], context=ctx)[0]
+            website_id=snapshot.website_id.id
+            snap_ids = []
+            for current in self.browse(cr, uid, ids, context=context):
+                #check if current is in snapshot
+                if current.snapshot_id == snapshot_id:
+                    snap_ids.append(current.id)
+                else:
+                    copy_id=self.copy(cr,uid, current.id,{'snapshot_id':snapshot_id, 'website_id':website_id},context=ctx)
+                    snap_ids.append(copy_id)
+            super(ViewVersion, self).write(cr, uid, snap_ids, vals, context=ctx)
+        else:
+            ctx = dict(context, mykey=True)
+            super(ViewVersion, self).write(cr, uid, ids, vals, context=context)
     
     #To make a snapshot of a snapshot
     def copy_snapshot(self,cr, uid, snapshot_id,new_snapshot_id, context=None):
