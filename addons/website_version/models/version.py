@@ -33,7 +33,7 @@ class ViewVersion(osv.Model):
             snap_ids = []
             for current in self.browse(cr, uid, ids, context=context):
                 #check if current is in snapshot
-                if current.snapshot_id == snapshot_id:
+                if current.snapshot_id.id == snapshot_id:
                     snap_ids.append(current.id)
                 else:
                     copy_id=self.copy(cr,uid, current.id,{'snapshot_id':snapshot_id, 'website_id':website_id},context=ctx)
